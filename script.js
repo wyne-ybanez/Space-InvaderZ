@@ -4,13 +4,14 @@ const c = canvas.getContext('2d') // get canvas, set it to 2D
 canvas.width = innerWidth
 canvas.height = innerHeight
 
+/**
+ * Player Class
+ * - starting position
+ * - velocity
+ * - body (image, width, height)
+*/
 class Player {
-  /**
-   * ====== Constructor
-   * - starting position
-   * - velocity
-   * - body (image, width, height)
-   */
+  // ====== Constructor
   constructor() {
     const image = new Image(); // this comes from the JavaScript API
     image.src = "./img/spaceship.png"; // get the image but takes time to load
@@ -41,13 +42,9 @@ class Player {
     };
   }
 
-  /**
-   * ====== Methods
-   */
-
+  //====== Methods
   /**
    * Draw Player
-   * - draws player
    * - sets player ship rotation
    * - restore context after rotation
    */
@@ -94,15 +91,65 @@ class Player {
 }
 
 /**
- * Create Player Instance
+ * Projectile Class (object params: position, velocity)
+ * - position (x,y)
+ * - velocity (x,y)
+ * - projectile radius can be static or dynamic
+ */
+class Projectile {
+  //====== Constructor
+  constructor({ position, velocity }) {
+    this.position = position;
+    this.velocity = velocity;
+
+    this.radius = 3;
+  }
+
+  //====== Methods
+  /**
+   * Draw
+   * - sets projectile circular shape
+   * - sets projectile color
+   */
+  draw() {
+    c.beginPath()
+    c.arc(this.position.x, this.position.y, this.radius, 0,
+        Math.PI * 2) // creates a cirlce
+    c.fillStyle = 'red'
+    c.fill()
+    c.closePath()
+  }
+
+  /**
+   * Update
+   * - updates projectile position
+   */
+  update() {
+    this.draw()
+    this.position.x += this.velocity.x
+    this.position.y += this.velocity.y
+  }
+}
+
+/**
+ * Create Objects
+ * - create player
+ * - create projectiles array
  * - set control keys
  */
 const player = new Player()
+const projectiles = []
 const keys = {
   a: {
     pressed: false,
   },
   d: {
+    pressed: false,
+  },
+  ArrowLeft: {
+    pressed: false,
+  },
+  ArrowRight: {
     pressed: false,
   },
   space: {
@@ -111,24 +158,19 @@ const keys = {
 };
 
 /**
- * Player debugger
- */
-if (player) {
-    console.log("Process: Player Generated [✓]");
-} else {
-    console.log("Process: Player Not Generated [x]");
-}
-
-/**
  * Process Game Animation
- * - check for player existence
- * - check for movement
+ * - updates player
+ * - updates projectiles in projectile array
+ * - check for player movement
  */
 function animate() {
     requestAnimationFrame(animate)
     c.fillStyle = "black"
     c.fillRect(0, 0, canvas.width, canvas.height)
     player.update()
+    projectiles.forEach(projectile => {
+        projectile.update()
+    })
 
     // movement
     // left
@@ -158,26 +200,42 @@ animate();
 addEventListener('keydown', ({key}) => {
     switch (key) {
       case "a": // left
+      case "ArrowLeft":
         keys.a.pressed = true;
         break;
       case "d": // right
+      case "ArrowRight":
         keys.d.pressed = true;
         break;
       case "s": // down
         break;
       case "w": // up
         break;
-      case " ": // space
-        break
+      case " ": // space, shoot by adding projectile to array
+        projectiles.push(
+          new Projectile({
+            position: {
+              x: player.position.x + (player.body.width / 2),
+              y: player.position.y,
+            },
+            velocity: {
+              x: 0,
+              y: -5,
+            },
+          })
+        );
+        break;
     }
 })
 
 addEventListener("keyup", ({ key }) => {
   switch (key) {
     case "a": // left
+    case "ArrowLeft":
       keys.a.pressed = false;
       break;
     case "d": // right
+    case "ArrowRight":
       keys.d.pressed = false;
       break;
     case "s": // down
@@ -188,3 +246,12 @@ addEventListener("keyup", ({ key }) => {
       break;
   }
 });
+
+/**
+ * Player debugger
+ */
+if (player) {
+    console.log("Process: Player Generated [✓]");
+} else {
+    console.log("Process: Player Not Generated [x]");
+}
