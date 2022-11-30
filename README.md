@@ -2,14 +2,19 @@
 
 ...
 
+&nbsp
+
 ## Project Goal
 
 ...
 
+&nbsp
 
 ## Learning Outcomes
 
 - ...
+
+&nbsp
 
 ## UX
 
@@ -19,9 +24,29 @@
 
 ### Scope
 
-Features planned:
+**Basics:**
+- Poject Setup
+- Create a Player
+- Allow the Player to move
+- Create Projectiles
+- Create an Invader
+- Create and move grids of invaders
+- Spawn grids at intervals
+- Allow invaders to shoot back
+- Enemy explosions
+- Create background
+- Create lose conditions
+- Score functionality
+- Fixed-width for the canvas
 
-...
+**Extras:**
+- Dynamic score labels
+- Bombs
+- Machine gun power-up
+- Progressively harder enemies/levels
+- Spaceship sprite animation
+- Start and Game Over UI
+- Sound effects and Music
 
 ### Structure
 
