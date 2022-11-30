@@ -7,34 +7,64 @@ canvas.height = innerHeight
 class Player {
     /**
      * Constructor
-     * - position
-     * - speed
-     * - shape (width, height)
+     * - starting position
+     * - velocity
+     * - body (image, width, height)
      */
     constructor() {
-        this.position = {
-            x: 200,
-            y: 200,
-        }
+        const image = new Image() // this comes from the JavaScript API
+        image.src = './img/spaceship.png' // get the image but takes time to load
+        const scale = 0.15;
+        const margin = 50
 
-        this.velocity = {
-            x: 0,
-            y: 0,
+        // Set attributes after loading
+        image.onload = () => {
+            this.velocity = {
+              x: 0,
+              y: 0,
+            };
+
+            this.body = {
+              image: image,
+              width: image.width * scale,
+              height: image.height * scale,
+            }
+
+            this.position = {
+              x: (canvas.width / 2) - (this.body.width / 2),
+              y: canvas.height - this.body.height - margin
+            };
         }
-        // this.image
-        this.width = 100
-        this.height = 100
     }
 
     /**
      * Methods
      */
     draw() {
-        c.fillStyle = 'red'
-        c.fillRect(this.position.x, this.position.y, this.width, this.height)
+        // DEBUGGING - comment out if unused
+        // c.fillStyle = 'red'
+        // c.fillRect(this.position.x, this.position.y, this.width, this.height)
+        if (this.body) {
+            c.drawImage(
+                this.body.image,
+                this.position.x,
+                this.position.y,
+                this.body.width,
+                this.body.height
+            )
+        }
     }
 }
 
 const player = new Player() // create object for player
 player.draw()
 
+function animate() {
+    requestAnimationFrame(animate)
+    c.fillStyle = "black"
+    c.fillRect(0, 0, canvas.width, canvas.height)
+    player.draw()
+    // console.log('Process: Animation Running ✓')
+}
+
+animate()
