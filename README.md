@@ -2,19 +2,19 @@
 
 ...
 
-&nbsp
+&nbsp;
 
 ## Project Goal
 
 ...
 
-&nbsp
+&nbsp;
 
 ## Learning Outcomes
 
 - ...
 
-&nbsp
+&nbsp;
 
 ## UX
 
@@ -25,6 +25,7 @@
 ### Scope
 
 **Basics:**
+
 - Poject Setup
 - Create a Player
 - Allow the Player to move
@@ -40,6 +41,7 @@
 - Fixed-width for the canvas
 
 **Extras:**
+
 - Dynamic score labels
 - Bombs
 - Machine gun power-up
@@ -79,15 +81,22 @@ The following main pages will be implemented:
 #### Fonts
 
 - ...
+
+&nbsp;
+
 ## Features
 
 ### Some Feature:
 
 ...
 
+&nbsp;
+
 ## Testing
 
 ...
+
+&nbsp;
 
 ## Technologies used:
 
@@ -102,6 +111,8 @@ The following main pages will be implemented:
 ### Frameworks, Libraries, CDN's, Resources etc.
 - ...
 
+&nbsp;
+
 ## Forking the Repository
 
 You can fork the repository through the following steps. Forking the repository means you will have a copy of the repository and any changes you make will not affect the original repository.
@@ -109,6 +120,8 @@ You can fork the repository through the following steps. Forking the repository 
 1. Log in to GitHub and locate the GitHub Repository. Here is a link for the [repository](...)
 2. At the top of the Repository (not top of page) just above the "Settings" Button on the menu. Looking towards the right of the page. Locate the button "Fork" then click
 3. You should now have a copy of the original repository in your GitHub account
+
+&nbsp;
 
 ## Local Clone
 
@@ -124,13 +137,19 @@ git clone https://github.com/wyne-ybanez/Space-InvaderZ.git
 
 Here is a link that can explain this process further. [Click Here](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository#cloning-a-repository-to-github-desktop)
 
+&nbsp;
+
 ## Deployment
 
 ...
 
+&nbsp;
+
 ## Bugs
 
 * ...
+
+&nbsp;
 
 ## References
 
@@ -145,9 +164,13 @@ Here is a link that can explain this process further. [Click Here](https://help.
 
 - ...
 
+&nbsp;
+
 ## Future Implementations
 
 - ...
+
+&nbsp;
 
 ## Acknowledgements
 

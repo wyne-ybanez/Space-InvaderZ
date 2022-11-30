@@ -6,7 +6,7 @@ canvas.height = innerHeight
 
 class Player {
     /**
-     * Constructor
+     * ====== Constructor
      * - starting position
      * - velocity
      * - body (image, width, height)
@@ -17,12 +17,14 @@ class Player {
         const scale = 0.15;
         const margin = 50
 
-        // Set attributes after loading
+        this.velocity = {
+          x: 0,
+          y: 0,
+        };
+
+        // Image has loaded hence, set attributes
         image.onload = () => {
-            this.velocity = {
-              x: 0,
-              y: 0,
-            };
+            this.imageLoad = true
 
             this.body = {
               image: image,
@@ -38,13 +40,15 @@ class Player {
     }
 
     /**
-     * Methods
+     * ====== Methods
+     * - draw Player
+     * - update player after movement
      */
     draw() {
         // DEBUGGING - comment out if unused
         // c.fillStyle = 'red'
-        // c.fillRect(this.position.x, this.position.y, this.width, this.height)
-        if (this.body) {
+        // c.fillRect(this.position.x, this.position.y, this.body.width, this.body.height)
+        if (this.imageLoad) {
             c.drawImage(
                 this.body.image,
                 this.position.x,
@@ -54,17 +58,104 @@ class Player {
             )
         }
     }
+
+    update() {
+        if (this.imageLoad) {
+            this.draw()
+            this.position.x += this.velocity.x
+        }
+    }
 }
 
-const player = new Player() // create object for player
-player.draw()
+/**
+ * Create Player Instance
+ * - set control keys
+ */
+const player = new Player()
+const keys = {
+  a: {
+    pressed: false,
+  },
+  d: {
+    pressed: false,
+  },
+  space: {
+    pressed: false,
+  },
+};
 
+/**
+ * Player debugger
+ */
+if (player) {
+    console.log("Process: Player Generated [✓]");
+} else {
+    console.log("Process: Player Not Generated [x]");
+}
+
+/**
+ * Process Game Animation
+ * - check for player existence
+ * - check for movement
+ */
 function animate() {
     requestAnimationFrame(animate)
     c.fillStyle = "black"
     c.fillRect(0, 0, canvas.width, canvas.height)
-    player.draw()
-    // console.log('Process: Animation Running ✓')
+    player.update()
+
+    // movement
+    // left
+    if (keys.a.pressed && (player.position.x >= 0)) {
+      player.velocity.x = -7;
+    }
+    // right
+    else if (keys.d.pressed && (player.position.x + player.body.width <= canvas.width)) {
+      player.velocity.x = 7;
+    }
+    // stop
+    else {
+      player.velocity.x = 0;
+    }
 }
 
-animate()
+animate();
+
+/**
+ * Player Movement Monitor
+ * - monitor key down event actions (using object destructuring)
+ * - monitor key up event actions
+ */
+addEventListener('keydown', ({key}) => {
+    switch (key) {
+      case "a": // left
+        keys.a.pressed = true;
+        break;
+      case "d": // right
+        keys.d.pressed = true;
+        break;
+      case "s": // down
+        break;
+      case "w": // up
+        break;
+      case " ": // space
+        break
+    }
+})
+
+addEventListener("keyup", ({ key }) => {
+  switch (key) {
+    case "a": // left
+      keys.a.pressed = false;
+      break;
+    case "d": // right
+      keys.d.pressed = false;
+      break;
+    case "s": // down
+      break;
+    case "w": // up
+      break;
+    case " ": // space
+      break;
+  }
+});
