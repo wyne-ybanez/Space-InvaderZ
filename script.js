@@ -45,14 +45,11 @@ class Player {
   //====== Methods
   /**
    * Draw Player
-   * - sets player ship rotation
-   * - restore context after rotation
    */
   draw() {
     // DEBUGGING - comment out if unused
     // c.fillStyle = 'red'
     // c.fillRect(this.position.x, this.position.y, this.body.width, this.body.height)
-
     c.save();
     // makes rotatation
     c.translate(
@@ -74,18 +71,80 @@ class Player {
       this.body.width,
       this.body.height
     );
-
     c.restore();
   }
 
   /**
    * Update Player
-   * - updates player position/changes
    */
   update() {
     if (this.imageLoad) {
       this.draw();
       this.position.x += this.velocity.x;
+    }
+  }
+}
+
+/**
+ * Invader Class
+ * - starting position
+ * - velocity
+ * - body (image, width, height)
+*/
+class Invader {
+  // ====== Constructor
+  constructor() {
+    const image = new Image(); // this comes from the JavaScript API
+    image.src = "./img/invader.png"; // get the image but takes time to load
+    const scale = 1;
+    const margin = 50;
+
+    this.velocity = {
+      x: 0,
+      y: 0,
+    };
+
+    this.rotation = 0;
+
+    // Image has loaded hence, set attributes
+    image.onload = () => {
+      this.imageLoad = true;
+
+      this.body = {
+        image: image,
+        width: image.width * scale,
+        height: image.height * scale,
+      };
+
+      this.position = {
+        x: canvas.width / 2 - this.body.width / 2,
+        y: canvas.height / 2,
+      };
+    };
+  }
+
+  //====== Methods
+  /**
+   * Draw Invader
+   */
+  draw() {
+    c.drawImage(
+      this.body.image,
+      this.position.x,
+      this.position.y,
+      this.body.width,
+      this.body.height
+    );
+  }
+
+  /**
+   * Update Invader
+   */
+  update() {
+    if (this.imageLoad) {
+      this.draw();
+      this.position.x += this.velocity.x;
+      this.position.y += this.velocity.y;
     }
   }
 }
@@ -122,7 +181,6 @@ class Projectile {
 
   /**
    * Update
-   * - updates projectile position
    */
   update() {
     this.draw()
@@ -138,7 +196,11 @@ class Projectile {
  * - set control keys
  */
 const player = new Player()
+
 const projectiles = []
+
+const invader = new Invader()
+
 const keys = {
   a: {
     pressed: false,
@@ -167,6 +229,8 @@ function animate() {
     requestAnimationFrame(animate)
     c.fillStyle = "black"
     c.fillRect(0, 0, canvas.width, canvas.height)
+
+    invader.update()
     player.update()
 
     // Projectile refresh when hits the top of screen
@@ -256,10 +320,16 @@ addEventListener("keyup", ({ key }) => {
 });
 
 /**
- * Player debugger
+ * Game debugger
  */
 if (player) {
-    console.log("Process: Player Generated [✓]");
+    console.log("Player: Spawned [✓]");
 } else {
-    console.log("Process: Player Not Generated [x]");
+    console.log("Player: Not Spawning [x]");
+}
+
+if (invader) {
+  console.log("Invader: Spawned [✓]");
+} else {
+  console.log("Invader: Not Spawning [x]");
 }
