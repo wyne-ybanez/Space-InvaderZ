@@ -168,8 +168,16 @@ function animate() {
     c.fillStyle = "black"
     c.fillRect(0, 0, canvas.width, canvas.height)
     player.update()
-    projectiles.forEach(projectile => {
-        projectile.update()
+
+    // Projectile refresh when hits the top of screen
+    projectiles.forEach((projectile, index) => {
+        if (projectile.position.y + projectile.radius <= 0){
+          setTimeout(() => {
+            projectiles.splice(index, 1) // take the one projectile out of the array and remove from the scene
+          }, 0)
+        } else {
+          projectile.update();
+        }
     })
 
     // movement
@@ -220,7 +228,7 @@ addEventListener('keydown', ({key}) => {
             },
             velocity: {
               x: 0,
-              y: -5,
+              y: -10,
             },
           })
         );
