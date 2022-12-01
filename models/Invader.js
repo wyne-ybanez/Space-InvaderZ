@@ -5,18 +5,17 @@ canvas.width = innerWidth;
 canvas.height = innerHeight;
 
 /**
- * Player Class
+ * Invader Class
  * - starting position
  * - velocity
  * - body (image, width, height)
  */
-export default class Player {
+class Invader {
   // ====== Constructor
   constructor() {
     const image = new Image(); // this comes from the JavaScript API
-    image.src = "./img/spaceship.png"; // get the image but takes time to load
-    const scale = 0.15;
-    const margin = 50;
+    image.src = "./img/invader.png"; // get the image but takes time to load
+    const scale = 1;
 
     this.velocity = {
       x: 0,
@@ -37,36 +36,16 @@ export default class Player {
 
       this.position = {
         x: canvas.width / 2 - this.body.width / 2,
-        y: canvas.height - this.body.height - margin,
+        y: canvas.height / 2,
       };
     };
   }
 
   //====== Methods
   /**
-   * Draw Player
-   * - sets player ship rotation
-   * - restore context after rotation
+   * Draw Invader
    */
   draw() {
-    // DEBUGGING - comment out if unused
-    // c.fillStyle = 'red'
-    // c.fillRect(this.position.x, this.position.y, this.body.width, this.body.height)
-
-    c.save();
-    // makes rotatation
-    c.translate(
-      player.position.x + player.body.width / 2,
-      player.position.y + player.body.height / 2
-    );
-    c.rotate(this.rotation);
-
-    // clean up after rotation
-    c.translate(
-      -player.position.x - player.body.width / 2,
-      -player.position.y - player.body.height / 2
-    );
-
     c.drawImage(
       this.body.image,
       this.position.x,
@@ -74,18 +53,16 @@ export default class Player {
       this.body.width,
       this.body.height
     );
-
-    c.restore();
   }
 
   /**
-   * Update Player
-   * - updates player position/changes
+   * Update Invader
    */
   update() {
     if (this.imageLoad) {
       this.draw();
       this.position.x += this.velocity.x;
+      this.position.y += this.velocity.y;
     }
   }
 }
