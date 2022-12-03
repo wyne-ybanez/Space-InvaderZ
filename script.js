@@ -178,12 +178,14 @@ class Invader {
 
   /**
    * Update Invader
+   *
+   * @param velocity object, so that the invaders will be affected by the grid position
    */
-  update() {
+  update({ velocity }) {
     if (this.imageLoad) {
       this.draw();
-      this.position.x += this.velocity.x;
-      this.position.y += this.velocity.y;
+      this.position.x += velocity.x;
+      this.position.y += velocity.y;
     }
   }
 }
@@ -201,15 +203,16 @@ class InvaderGrid {
     };
 
     this.velocity = {
-      x: 0,
+      x: 3,
       y: 0,
     };
 
     this.invaders = [];
 
-    // equation to set rows and columns for grid
+    // equation to set rows, columns, width for grid
     const columns = Math.floor(Math.random() * 10 + 5);
-    const rows = Math.floor(Math.random() * 5 + 2)
+    const rows = Math.floor(Math.random() * 5 + 2);
+    this.width = columns * 30; // 30 is the width of each invader
 
     // first loop: handles columns
     // second loop: handles rows
@@ -230,6 +233,16 @@ class InvaderGrid {
 
   //====== Methods
   update() {
+    this.position.x += this.velocity.x
+    this.position.y += this.velocity.y
+
+    this.velocity.y = 0
+
+    // if grid hits canvas edge
+    if (this.position.x + this.width >= canvas.width || this.position.x <= 0) {
+      this.velocity.x = -this.velocity.x
+      this.velocity.y = 30
+    }
   }
 }
 
@@ -277,7 +290,7 @@ function animate() {
     c.fillRect(0, 0, canvas.width, canvas.height)
     player.update()
 
-    // Projectile refresh when hits the top of screen
+    // projectile refresh
     projectiles.forEach((projectile, index) => {
         if (projectile.position.y + projectile.radius <= 0){
           setTimeout(() => {
@@ -288,11 +301,11 @@ function animate() {
         }
     })
 
-    // Invader Grids
+    // invader grids
     invaderGrids.forEach(grid => {
       grid.update()
-      grid.invaders.forEach(invader => { // render out each invader in array
-        invader.update()
+      grid.invaders.forEach((invader) => { // render out each invader in array
+        invader.update({ velocity: grid.velocity }) // invaders have the same velocity as the grids object
       })
     })
 
