@@ -101,8 +101,6 @@ class Projectile {
   //====== Methods
   /**
    * Draw
-   * - sets projectile circular shape
-   * - sets projectile color
    */
   draw() {
     c.beginPath();
@@ -243,6 +241,54 @@ class InvaderGrid {
   }
 }
 
+/**
+ * Invader Projectile Class (object params: position, velocity)
+ * - position (x,y)
+ * - velocity (x,y)
+ * - invader-projectile radius can be static or dynamic
+ */
+class InvaderProjectile {
+  constructor({ position, velocity }) {
+    this.position = position;
+    this.velocity = velocity;
+    this.width = 3;
+    this.height = 10;
+  }
+
+  //====== Methods
+  /**
+   * Draw
+   */
+  draw() {
+    c.fillStyle = 'white'
+    c.fillRect(this.position.x, this.position.y, this.width, this.height)
+  }
+
+  /**
+   * Update
+   */
+  update() {
+    this.draw();
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
+  }
+
+  shoot(invaderProjectiles) {
+    invaderProjectiles.push(
+      new InvaderProjectile({
+        position: {
+          x: (this.position.x) + (this.width / 2),
+          y: (this.position.y) + (this.height)
+        },
+        velocity: {
+          x: 0,
+          y: 5
+        }
+      })
+    )
+  }
+}
+
 // =============== END OF CLASSES =================
 
 /**
@@ -255,6 +301,7 @@ class InvaderGrid {
 const player = new Player();
 const projectiles = [];
 const invaderGrids = [new InvaderGrid()];
+const invaderProjectiles = []
 
 const keys = {
   a: {
@@ -446,3 +493,7 @@ player
 invaderGrids
   ? console.log("Invaders: Spawned [✓]")
   : console.log("Invaders: Not Spawning [x]");
+
+projectiles
+  ? console.log("Projectiles: Loaded [✓] ")
+  : console.log("Projectiles: Not Loaded [x]");
