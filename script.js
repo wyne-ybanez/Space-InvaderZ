@@ -129,7 +129,7 @@ class Projectile {
  * - starting position
  * - velocity
  * - body (image, width, height)
- * 
+ *
  * @params 'position' as object
 */
 class Invader {
@@ -227,7 +227,6 @@ class InvaderGrid {
           })
         );
       }
-      console.log(this.invaders);
     }
   }
 
@@ -238,7 +237,7 @@ class InvaderGrid {
 
     this.velocity.y = 0
 
-    // if grid hits canvas edge
+    // if Invader Grid hits canvas edge
     if (this.position.x + this.width >= canvas.width || this.position.x <= 0) {
       this.velocity.x = -this.velocity.x
       this.velocity.y = 30
@@ -276,6 +275,9 @@ const keys = {
     pressed: false,
   },
 };
+
+let frames = 0
+let randomInteveral = Math.random() * 500 + 500
 
 /**
  * Process Game Animation
@@ -325,6 +327,15 @@ function animate() {
       player.velocity.x = 0;
       player.rotation = 0;
     }
+
+    // spawning enemies
+    if (frames % randomInteveral === 0) {
+      invaderGrids.push(new InvaderGrid())
+      randomInteveral = Math.floor(Math.random() * 500 + 500);
+      frames = 0
+      console.log(randomInteveral)
+    }
+  frames++
 }
 
 animate();
@@ -387,14 +398,6 @@ addEventListener("keyup", ({ key }) => {
 /**
  * Game debugger
  */
-if (player) {
-    console.log("Player: Spawned [✓]");
-} else {
-    console.log("Player: Not Spawning [x]");
-}
+player ? console.log("Player: Spawned [✓]") : console.log("Player: Not Spawning [x]")
 
-if (invaderGrids) {
-  console.log("Invaders: Spawned [✓]");
-} else {
-  console.log("Invaders: Not Spawning [x]");
-}
+invaderGrids ? console.log("Invaders: Spawned [✓]") : console.log("Invaders: Not Spawning [x]")
