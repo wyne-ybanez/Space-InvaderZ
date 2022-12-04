@@ -280,7 +280,7 @@ let randomInteveral = Math.floor(Math.random() * 500 + 500);
 /**
  * Process Game Animation
  * - updates player
- * - updates projectiles in projectile array
+ * - updates projectiles
  * - updates invader grids
  * - check for player movement
  */
@@ -302,12 +302,12 @@ function animate() {
   });
 
   // invader grids creation
-  invaderGrids.forEach((grid) => {
+  invaderGrids.forEach((grid, gridIndex) => {
     grid.update();
     grid.invaders.forEach((invader, i) => {
       invader.update({ velocity: grid.velocity }); // render out each invader in array
 
-      // splice out invaders and projectile on hit with collision detection
+      // collision detection
       projectiles.forEach((projectile, j) => {
         if (
           projectile.position.y - projectile.radius <= // height detection
@@ -319,16 +319,30 @@ function animate() {
           projectile.position.x - projectile.radius <=
             invader.position.x + invader.body.width
         ) {
-          setTimeout(() => { // find what we need to remove (invader hit, projectile fired)
-            const invaderFound = grid.invaders.find(invader2 =>
-              invader2 === invader
-            )
-            const projectileFound = projectiles.find(projectile2 =>
-              projectile2 === projectile
-            )
-            if (invaderFound && projectileFound) { // if found, splice them out
+          setTimeout(() => {
+            // find what we need to remove (invader hit, projectile fired)
+            const invaderFound = grid.invaders.find(
+              (invader2) => invader2 === invader
+            );
+            const projectileFound = projectiles.find(
+              (projectile2) => projectile2 === projectile
+            );
+            // if found, remove them
+            if (invaderFound && projectileFound) {
               grid.invaders.splice(i, 1);
               projectiles.splice(j, 1);
+              // update width of invader grid
+              if (grid.invaders.length > 0) {
+                const firstInvader = grid.invaders[0];
+                const lastInvader = grid.invaders[grid.invaders.length - 1];
+                grid.width =
+                  lastInvader.position.x -
+                  firstInvader.position.x +
+                  lastInvader.body.width
+                grid.position.x = firstInvader.position.x
+              } else {
+                invaderGrids.splice(gridIndex, 1);
+              }
             }
           }, 0);
         }
