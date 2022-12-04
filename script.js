@@ -1,15 +1,15 @@
-const canvas = document.querySelector('canvas')
-const c = canvas.getContext('2d') // get canvas, set it to 2D
+const canvas = document.querySelector("canvas");
+const c = canvas.getContext("2d"); // get canvas, set it to 2D
 
-canvas.width = innerWidth
-canvas.height = innerHeight
+canvas.width = innerWidth;
+canvas.height = innerHeight;
 
 /**
  * Player Class
  * - starting position
  * - velocity
  * - body (image, width, height)
-*/
+ */
 class Player {
   constructor() {
     const image = new Image(); // this comes from the JavaScript API
@@ -95,7 +95,7 @@ class Projectile {
     this.position = position;
     this.velocity = velocity;
 
-    this.radius = 3;
+    this.radius = 5;
   }
 
   //====== Methods
@@ -105,24 +105,22 @@ class Projectile {
    * - sets projectile color
    */
   draw() {
-    c.beginPath()
-    c.arc(this.position.x, this.position.y, this.radius, 0,
-        Math.PI * 2) // creates a cirlce
-    c.fillStyle = 'red'
-    c.fill()
-    c.closePath()
+    c.beginPath();
+    c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2); // creates a cirlce
+    c.fillStyle = "red";
+    c.fill();
+    c.closePath();
   }
 
   /**
    * Update
    */
   update() {
-    this.draw()
-    this.position.x += this.velocity.x
-    this.position.y += this.velocity.y
+    this.draw();
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
   }
 }
-
 
 /**
  * Invader Class
@@ -131,7 +129,7 @@ class Projectile {
  * - body (image, width, height)
  *
  * @params 'position' as object
-*/
+ */
 class Invader {
   constructor({ position }) {
     const image = new Image(); // this comes from the JavaScript API
@@ -157,7 +155,7 @@ class Invader {
 
       this.position = {
         x: position.x,
-        y: position.y
+        y: position.y,
       };
     };
   }
@@ -232,15 +230,15 @@ class InvaderGrid {
 
   //====== Methods
   update() {
-    this.position.x += this.velocity.x
-    this.position.y += this.velocity.y
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
 
-    this.velocity.y = 0
+    this.velocity.y = 0;
 
     // if Invader Grid hits canvas edge
     if (this.position.x + this.width >= canvas.width || this.position.x <= 0) {
-      this.velocity.x = -this.velocity.x
-      this.velocity.y = 30
+      this.velocity.x = -this.velocity.x;
+      this.velocity.y = 30;
     }
   }
 }
@@ -254,9 +252,9 @@ class InvaderGrid {
  * - create multiple invader grids
  * - set control keys
  */
-const player = new Player()
-const projectiles = []
-const invaderGrids = [new InvaderGrid()]
+const player = new Player();
+const projectiles = [];
+const invaderGrids = [new InvaderGrid()];
 
 const keys = {
   a: {
@@ -276,8 +274,8 @@ const keys = {
   },
 };
 
-let frames = 0
-let randomInteveral = Math.random() * 500 + 500
+let frames = 0;
+let randomInteveral = Math.floor(Math.random() * 500 + 500);
 
 /**
  * Process Game Animation
@@ -287,55 +285,84 @@ let randomInteveral = Math.random() * 500 + 500
  * - check for player movement
  */
 function animate() {
-    requestAnimationFrame(animate)
-    c.fillStyle = "black"
-    c.fillRect(0, 0, canvas.width, canvas.height)
-    player.update()
+  requestAnimationFrame(animate);
+  c.fillStyle = "black";
+  c.fillRect(0, 0, canvas.width, canvas.height);
+  player.update();
 
-    // projectile refresh
-    projectiles.forEach((projectile, index) => {
-        if (projectile.position.y + projectile.radius <= 0){
-          setTimeout(() => {
-            projectiles.splice(index, 1) // take the one projectile out of the array and remove from the scene
-          }, 0)
-        } else {
-          projectile.update();
+  // projectile refresh
+  projectiles.forEach((projectile, index) => {
+    if (projectile.position.y + projectile.radius <= 0) {
+      setTimeout(() => {
+        projectiles.splice(index, 1); // take the one projectile out of the array and remove from the scene
+      }, 0);
+    } else {
+      projectile.update();
+    }
+  });
+
+  // invader grids creation
+  invaderGrids.forEach((grid) => {
+    grid.update();
+    grid.invaders.forEach((invader, i) => {
+      invader.update({ velocity: grid.velocity }); // render out each invader in array
+
+      // splice out invaders and projectile on hit with collision detection
+      projectiles.forEach((projectile, j) => {
+        if (
+          projectile.position.y - projectile.radius <= // height detection
+            invader.position.y + invader.body.height &&
+          projectile.position.y + projectile.radius >=
+            invader.position.y &&
+          projectile.position.x + projectile.radius >= // width detection
+            invader.position.x &&
+          projectile.position.x - projectile.radius <=
+            invader.position.x + invader.body.width
+        ) {
+          setTimeout(() => { // find what we need to remove (invader hit, projectile fired)
+            const invaderFound = grid.invaders.find(invader2 =>
+              invader2 === invader
+            )
+            const projectileFound = projectiles.find(projectile2 =>
+              projectile2 === projectile
+            )
+            if (invaderFound && projectileFound) { // if found, splice them out
+              grid.invaders.splice(i, 1);
+              projectiles.splice(j, 1);
+            }
+          }, 0);
         }
-    })
+      });
 
-    // invader grids
-    invaderGrids.forEach(grid => {
-      grid.update()
-      grid.invaders.forEach((invader) => { // render out each invader in array
-        invader.update({ velocity: grid.velocity }) // invaders have the same velocity as the grids object
-      })
-    })
+    });
+  });
 
-    // movement
-    // left
-    if (keys.a.pressed && (player.position.x >= 0)) {
-      player.velocity.x = -7;
-      player.rotation = -.15
-    }
-    // right
-    else if (keys.d.pressed && (player.position.x + player.body.width <= canvas.width)) {
-      player.velocity.x = 7;
-      player.rotation = .15
-    }
-    // stop
-    else {
-      player.velocity.x = 0;
-      player.rotation = 0;
-    }
+  // spawning enemies
+  if (frames % randomInteveral === 0) {
+    invaderGrids.push(new InvaderGrid());
+    frames = 0;
+  }
+  frames++;
 
-    // spawning enemies
-    if (frames % randomInteveral === 0) {
-      invaderGrids.push(new InvaderGrid())
-      randomInteveral = Math.floor(Math.random() * 500 + 500);
-      frames = 0
-      console.log(randomInteveral)
-    }
-  frames++
+  // movement
+  // left
+  if (keys.a.pressed && player.position.x >= 0) {
+    player.velocity.x = -7;
+    player.rotation = -0.15;
+  }
+  // right
+  else if (
+    keys.d.pressed &&
+    player.position.x + player.body.width <= canvas.width
+  ) {
+    player.velocity.x = 7;
+    player.rotation = 0.15;
+  }
+  // stop
+  else {
+    player.velocity.x = 0;
+    player.rotation = 0;
+  }
 }
 
 animate();
@@ -345,36 +372,36 @@ animate();
  * - monitor key down event actions (using object destructuring)
  * - monitor key up event actions
  */
-addEventListener('keydown', ({key}) => {
-    switch (key) {
-      case "a": // left
-      case "ArrowLeft":
-        keys.a.pressed = true;
-        break;
-      case "d": // right
-      case "ArrowRight":
-        keys.d.pressed = true;
-        break;
-      case "s": // down
-        break;
-      case "w": // up
-        break;
-      case " ": // space, shoot by adding projectile to array
-        projectiles.push(
-          new Projectile({
-            position: {
-              x: player.position.x + (player.body.width / 2),
-              y: player.position.y,
-            },
-            velocity: {
-              x: 0,
-              y: -10,
-            },
-          })
-        );
-        break;
-    }
-})
+addEventListener("keydown", ({ key }) => {
+  switch (key) {
+    case "a": // left
+    case "ArrowLeft":
+      keys.a.pressed = true;
+      break;
+    case "d": // right
+    case "ArrowRight":
+      keys.d.pressed = true;
+      break;
+    case "s": // down
+      break;
+    case "w": // up
+      break;
+    case " ": // space, shoot by adding projectile to array
+      projectiles.push(
+        new Projectile({
+          position: {
+            x: player.position.x + player.body.width / 2,
+            y: player.position.y,
+          },
+          velocity: {
+            x: 0,
+            y: -10,
+          },
+        })
+      );
+      break;
+  }
+});
 
 addEventListener("keyup", ({ key }) => {
   switch (key) {
@@ -398,6 +425,10 @@ addEventListener("keyup", ({ key }) => {
 /**
  * Game debugger
  */
-player ? console.log("Player: Spawned [✓]") : console.log("Player: Not Spawning [x]")
+player
+  ? console.log("Player: Spawned [✓]")
+  : console.log("Player: Not Spawning [x]");
 
-invaderGrids ? console.log("Invaders: Spawned [✓]") : console.log("Invaders: Not Spawning [x]")
+invaderGrids
+  ? console.log("Invaders: Spawned [✓]")
+  : console.log("Invaders: Not Spawning [x]");
