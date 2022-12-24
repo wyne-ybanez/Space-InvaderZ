@@ -346,7 +346,7 @@ function animate() {
       grid.invaders[Math.floor(Math.random() * grid.invaders.length)].shoot(
         invaderProjectiles
       );
-      console.log(invaderProjectiles.position)
+      console.log(invaderProjectiles[gridIndex].position) // tracker
     }
 
     grid.invaders.forEach((invader, i) => {
@@ -422,8 +422,6 @@ function animate() {
   }
 }
 
-animate();
-
 /**
  * Player Movement Monitor
  * - monitor key down event actions (using object destructuring)
@@ -493,3 +491,6 @@ invaderGrids
 projectiles
   ? console.log("Projectiles: Loaded [✓] ")
   : console.log("Projectiles: Not Loaded [x]");
+
+
+animate();
