@@ -98,10 +98,6 @@ class Projectile {
     this.radius = 5;
   }
 
-  //====== Methods
-  /**
-   * Draw
-   */
   draw() {
     c.beginPath();
     c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2); // creates a cirlce
@@ -110,13 +106,46 @@ class Projectile {
     c.closePath();
   }
 
-  /**
-   * Update
-   */
   update() {
     this.draw();
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
+  }
+}
+
+/**
+ * Particle Class (object params: position, velocity)
+ * - position (x,y)
+ * - velocity (x,y)
+ * - particle radius can be static or dynamic
+ */
+class Particle {
+  constructor({ position, velocity, radius, color }) {
+    this.position = position;
+    this.velocity = velocity;
+
+    this.radius = radius;
+    this.color = color;
+    this.opacity = 1;
+  }
+
+  draw() {
+    c.save();
+    c.globalAlpha = this.opacity; 
+    c.beginPath();
+    c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2); // creates a cirlce
+    c.fillStyle = this.color;
+    c.fill();
+    c.closePath();
+    c.restore();
+  }
+
+  update() {
+    this.draw();
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
+
+    this.opacity -= 0.01; // fades out particles
   }
 }
 
@@ -263,7 +292,7 @@ class InvaderProjectile {
   }
 
   draw() {
-    c.fillStyle = "white";
+    c.fillStyle = "skyblue";
     c.fillRect(this.position.x, this.position.y, this.width, this.height);
   }
 
@@ -287,6 +316,7 @@ const player = new Player();
 const projectiles = [];
 const invaderGrids = [new InvaderGrid()];
 const invaderProjectiles = [];
+const particles = [];
 
 const keys = {
   a: {
@@ -310,17 +340,44 @@ let frames = 0;
 let randomInteveral = Math.floor(Math.random() * 500 + 500);
 
 /**
+ * Create Particles
+ */
+function createParticles({object, color, radius}) {
+  for (let i = 0; i < 15; i++) {
+    particles.push(
+      new Particle({
+        position: {
+          x: object.position.x + object.body.width / 2,
+          y: object.position.y + object.body.height / 2,
+        },
+        velocity: {
+          x: (Math.random() - 0.5) * 2,
+          y: (Math.random() - 0.5) * 2,
+        },
+        radius: radius || Math.random() * 6.7,
+        color: color || 'orange',
+      })
+    );
+  }
+}
+
+/**
  * Process Game Animation
- * - updates player
- * - updates projectiles
- * - updates invader grids
- * - check for player movement
  */
 function animate() {
   requestAnimationFrame(animate);
   c.fillStyle = "black";
   c.fillRect(0, 0, canvas.width, canvas.height);
   player.update();
+
+  // particles garbage collection
+  particles.forEach((particle, i) => {
+    if (particle.opacity <= 0) {
+      setTimeout(() => {
+        particles.splice(i, 1);
+      }, 0)
+    } else particle.update();
+  })
 
   // invader projectiles
   invaderProjectiles.forEach((invaderProjectile) => {
@@ -333,16 +390,27 @@ function animate() {
       }, 0);
     } else invaderProjectile.update();
 
+    // projectile hits player
     if (
-      invaderProjectile.position.y + invaderProjectile.height >= 
-      player.position.y && 
-      invaderProjectile.position.x + invaderProjectile.width >= 
-      player.position.x && 
-      invaderProjectile.position.x <= 
-      player.position.x + player.body.width
-      ) {
-        console.log('You lose!')
-      }
+      invaderProjectile.position.y <= // height detection
+        player.position.y + player.body.height &&
+      invaderProjectile.position.y >=
+        player.position.y &&
+      invaderProjectile.position.x >= // width detection
+        player.position.x &&
+      invaderProjectile.position.x <=
+        player.position.x + player.body.width
+    ) {
+      setTimeout(() => {
+        invaderProjectiles.splice(index, 1); // take the one projectile out of the array and remove from the scene
+      }, 0);
+      console.log("You lose!");
+      createParticles({
+        object: player,
+        color: "white",
+        radius: Math.random() * 3,
+      });
+    }
   })
 
   // player projectiles
@@ -369,7 +437,7 @@ function animate() {
 
     grid.invaders.forEach((invader, i) => {
       invader.update({ velocity: grid.velocity }); // render out each invader in array
-      // collision detection
+      // projectiles hit enemy
       projectiles.forEach((projectile, j) => {
         if (
           projectile.position.y - projectile.radius <= // height detection
@@ -381,15 +449,19 @@ function animate() {
             invader.position.x + invader.body.width
         ) {
           setTimeout(() => {
-            // find what we need to remove (invader hit, projectile fired)
             const invaderFound = grid.invaders.find(
               (invader2) => invader2 === invader
             );
             const projectileFound = projectiles.find(
               (projectile2) => projectile2 === projectile
             );
-            // if found, remove them
+
+            // remove invader + projectile (invader hit, projectile fired)
             if (invaderFound && projectileFound) {
+              createParticles({
+                object: invader, 
+              });
+
               grid.invaders.splice(i, 1);
               projectiles.splice(j, 1);
               // update width of invader grid
@@ -496,8 +568,15 @@ addEventListener("keyup", ({ key }) => {
 });
 
 /**
- * Game debugger
+ * Additional Functions
+ * - Random Color Generator (Hex)
+ * - Game debugger
  */
+const random_hex_color_code = () => {
+  let n = (Math.random() * 0xfffff * 1000000).toString(16);
+  return "#" + n.slice(0, 6);
+};
+
 player
   ? console.log("Player: Spawned [✓]")
   : console.log("Player: Not Spawning [x]");
