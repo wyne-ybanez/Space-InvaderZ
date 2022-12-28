@@ -322,11 +322,30 @@ function animate() {
   c.fillRect(0, 0, canvas.width, canvas.height);
   player.update();
 
-  // projectile refresh
+  // invader projectiles
   invaderProjectiles.forEach((invaderProjectile) => {
-    invaderProjectile.update();
+    if (
+      invaderProjectile.position.y + invaderProjectile.height >=
+      canvas.height
+      ){
+      setTimeout(() => {
+        invaderProjectiles.splice(index, 1); // take the one projectile out of the array and remove from the scene
+      }, 0);
+    } else invaderProjectile.update();
+
+    if (
+      invaderProjectile.position.y + invaderProjectile.height >= 
+      player.position.y && 
+      invaderProjectile.position.x + invaderProjectile.width >= 
+      player.position.x && 
+      invaderProjectile.position.x <= 
+      player.position.x + player.body.width
+      ) {
+        console.log('You lose!')
+      }
   })
 
+  // player projectiles
   projectiles.forEach((projectile, index) => {
     if (projectile.position.y + projectile.radius <= 0) {
       setTimeout(() => {
@@ -341,12 +360,11 @@ function animate() {
   invaderGrids.forEach((grid, gridIndex) => {
     grid.update();
 
-    // spawn projectiles - calling a random invader to shoot
+    // spawn invader projectiles - calling a random invader to shoot
     if (frames % 100 === 0 && grid.invaders.length > 0) {
       grid.invaders[Math.floor(Math.random() * grid.invaders.length)].shoot(
         invaderProjectiles
       );
-      console.log(invaderProjectiles[gridIndex].position) // tracker
     }
 
     grid.invaders.forEach((invader, i) => {
