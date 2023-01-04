@@ -23,6 +23,7 @@ class Player {
     };
 
     this.rotation = 0;
+    this.opacity = 1;
 
     // Image has loaded hence, set attributes
     image.onload = () => {
@@ -50,6 +51,10 @@ class Player {
     // c.fillStyle = 'red'
     // c.fillRect(this.position.x, this.position.y, this.body.width, this.body.height)
     c.save();
+
+    // set player opacity
+    c.globalAlpha = this.opacity;
+
     // makes rotatation
     c.translate(
       player.position.x + player.body.width / 2,
@@ -80,6 +85,7 @@ class Player {
     if (this.imageLoad) {
       this.draw();
       this.position.x += this.velocity.x;
+      this.position.y += this.velocity.y;
     }
   }
 }
@@ -132,7 +138,6 @@ class Particle {
 
   draw() {
     c.save();
-    c.globalAlpha = this.opacity; 
     c.beginPath();
     c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2); // creates a cirlce
     c.fillStyle = this.color;
@@ -328,6 +333,12 @@ const keys = {
   d: {
     pressed: false,
   },
+  s: {
+    pressed: false,
+  },
+  w: {
+    pressed: false,
+  },
   ArrowLeft: {
     pressed: false,
   },
@@ -341,6 +352,10 @@ const keys = {
 
 let frames = 0;
 let randomInteveral = Math.floor(Math.random() * 500 + 500);
+let game = {
+  over: false,
+  active: false
+}
 
 /**
  * Creates Background Particles
@@ -431,13 +446,15 @@ function animate() {
         player.position.x + player.body.width
     ) {
       setTimeout(() => {
-        invaderProjectiles.splice(index, 1); // take the one projectile out of the array and remove from the scene
+        invaderProjectiles.splice(index, 1); // garbage collection
+        player.opacity = 0;
+        game.over = true;
       }, 0);
-      console.log("You lose!");
       createParticles({
         object: player,
         color: "white",
-        radius: Math.random() * 3,
+        radius: Math.random() * 2,
+        fades: true
       });
     }
   })
@@ -533,16 +550,28 @@ function animate() {
     player.rotation = -0.15;
   }
   // right
-  else if (
-    keys.d.pressed &&
-    player.position.x + player.body.width <= canvas.width
-  ) {
+  else if (keys.d.pressed && player.position.x + player.body.width <= canvas.width) {
     player.velocity.x = 7;
     player.rotation = 0.15;
+  }
+  // down
+  else if (
+    keys.s.pressed &&
+    player.position.y + player.body.height <= canvas.height
+  ) {
+    player.velocity.y = 5;
+  }
+  // up
+  else if (
+    keys.w.pressed &&
+    player.position.y + player.body.height >= 0
+  ) {
+    player.velocity.y = -5;
   }
   // stop
   else {
     player.velocity.x = 0;
+    player.velocity.y = 0;
     player.rotation = 0;
   }
 }
@@ -563,8 +592,10 @@ addEventListener("keydown", ({ key }) => {
       keys.d.pressed = true;
       break;
     case "s": // down
+      keys.s.pressed = true;
       break;
     case "w": // up
+      keys.w.pressed = true;
       break;
     case " ": // space, shoot by adding projectile to array
       projectiles.push(
@@ -594,8 +625,10 @@ addEventListener("keyup", ({ key }) => {
       keys.d.pressed = false;
       break;
     case "s": // down
+      keys.s.pressed = false;
       break;
     case "w": // up
+      keys.w.pressed = false;
       break;
     case " ": // space
       break;
