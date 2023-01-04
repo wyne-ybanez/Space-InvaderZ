@@ -454,16 +454,20 @@ function animate() {
         player.opacity = 0;
         game.over = true;
       }, 0);
-
       setTimeout(() => {
         game.active = false;
       }, 2000);
-
       createParticles({
         object: player,
         color: "white",
-        radius: Math.random() * 2,
+        radius: Math.random() * 3,
         fades: true
+      })
+      createParticles({
+        object: player,
+        color: "white",
+        radius: Math.random() * 4,
+        fades: true,
       });
     }
   })
@@ -515,6 +519,25 @@ function animate() {
             if (invaderFound && projectileFound) {
               score += 100
               scoreEl.innerHTML = score
+              // dynamic score label
+              const scoreLabel = document.createElement('label')
+              scoreLabel.innerHTML = 100
+              scoreLabel.style.position = 'absolute'
+              scoreLabel.style.color = 'white'
+              scoreLabel.style.top = invader.position.y + 'px'
+              scoreLabel.style.left = invader.position.x + 'px'
+              scoreLabel.style.userSelect = 'none'
+              document.querySelector("#ParentDiv").appendChild(scoreLabel)
+
+              gsap.to(scoreLabel, {
+                opacity: 0,
+                y: -30,
+                duration: .75,
+                onComplete: () => {
+                  document.querySelector("#ParentDiv").removeChild(scoreLabel)
+                }
+              });
+
               createParticles({
                 object: invader,
                 fades: true
