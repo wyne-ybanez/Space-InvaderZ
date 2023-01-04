@@ -2,8 +2,8 @@ const scoreEl = document.querySelector("#scoreEl");
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d"); // get canvas, set it to 2D
 
-canvas.width = 1024;
-canvas.height = 576;
+canvas.width = innerWidth;
+canvas.height = innerHeight / 1.5;
 
 /**
  * Player Class
