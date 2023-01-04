@@ -354,7 +354,7 @@ let frames = 0;
 let randomInteveral = Math.floor(Math.random() * 500 + 500);
 let game = {
   over: false,
-  active: false
+  active: true
 }
 
 /**
@@ -404,6 +404,8 @@ function createParticles({ object, color, radius, fades }) {
  * Process Game Animation
  */
 function animate() {
+  if (!game.active) return
+
   requestAnimationFrame(animate);
   c.fillStyle = "black";
   c.fillRect(0, 0, canvas.width, canvas.height);
@@ -424,7 +426,7 @@ function animate() {
   })
 
   // invader projectiles
-  invaderProjectiles.forEach((invaderProjectile) => {
+  invaderProjectiles.forEach((invaderProjectile, index) => {
     if (
       invaderProjectile.position.y + invaderProjectile.height >=
       canvas.height
@@ -450,6 +452,11 @@ function animate() {
         player.opacity = 0;
         game.over = true;
       }, 0);
+
+      setTimeout(() => {
+        game.active = false;
+      }, 2000);
+
       createParticles({
         object: player,
         color: "white",
@@ -582,6 +589,8 @@ function animate() {
  * - monitor key up event actions
  */
 addEventListener("keydown", ({ key }) => {
+  if (game.over) return
+
   switch (key) {
     case "a": // left
     case "ArrowLeft":
