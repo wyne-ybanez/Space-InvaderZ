@@ -120,13 +120,14 @@ class Projectile {
  * - particle radius can be static or dynamic
  */
 class Particle {
-  constructor({ position, velocity, radius, color }) {
+  constructor({ position, velocity, radius, color, fades }) {
     this.position = position;
     this.velocity = velocity;
 
     this.radius = radius;
     this.color = color;
     this.opacity = 1;
+    this.fades = fades
   }
 
   draw() {
@@ -145,7 +146,9 @@ class Particle {
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
 
-    this.opacity -= 0.01; // fades out particles
+    if (this.fades){
+      this.opacity -= 0.01; // fades out particles
+    }
   }
 }
 
@@ -292,7 +295,7 @@ class InvaderProjectile {
   }
 
   draw() {
-    c.fillStyle = "skyblue";
+    c.fillStyle = "lime";
     c.fillRect(this.position.x, this.position.y, this.width, this.height);
   }
 
@@ -340,9 +343,29 @@ let frames = 0;
 let randomInteveral = Math.floor(Math.random() * 500 + 500);
 
 /**
- * Create Particles
+ * Creates Background Particles
  */
-function createParticles({object, color, radius}) {
+for (let i = 0; i < 100; i++) {
+  particles.push(
+    new Particle({
+      position: {
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+      },
+      velocity: {
+        x: 0,
+        y: 0.4,
+      },
+      radius: Math.random() * 2,
+      color: 'white',
+    })
+  );
+}
+
+/**
+ * Create Explosion Particles
+ */
+function createParticles({ object, color, radius, fades }) {
   for (let i = 0; i < 15; i++) {
     particles.push(
       new Particle({
@@ -356,6 +379,7 @@ function createParticles({object, color, radius}) {
         },
         radius: radius || Math.random() * 6.7,
         color: color || 'orange',
+        fades: fades
       })
     );
   }
@@ -370,12 +394,17 @@ function animate() {
   c.fillRect(0, 0, canvas.width, canvas.height);
   player.update();
 
-  // particles garbage collection
   particles.forEach((particle, i) => {
+    if (particle.position.y - particle.radius >= canvas.height) {
+      particle.position.x = Math.random() * canvas.width;
+      particle.position.y = -particle.radius;
+    }
+
+    // particles garbage collection
     if (particle.opacity <= 0) {
       setTimeout(() => {
         particles.splice(i, 1);
-      }, 0)
+      }, 0);
     } else particle.update();
   })
 
@@ -460,6 +489,12 @@ function animate() {
             if (invaderFound && projectileFound) {
               createParticles({
                 object: invader, 
+                fades: true
+              });
+              createParticles({
+                object: invader,
+                color: 'pink',
+                fades: true,
               });
 
               grid.invaders.splice(i, 1);
