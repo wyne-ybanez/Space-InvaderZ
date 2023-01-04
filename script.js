@@ -1,3 +1,4 @@
+const scoreEl = document.querySelector("#scoreEl");
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d"); // get canvas, set it to 2D
 
@@ -351,6 +352,7 @@ const keys = {
 };
 
 let frames = 0;
+let score = 0;
 let randomInteveral = Math.floor(Math.random() * 500 + 500);
 let game = {
   over: false,
@@ -511,8 +513,10 @@ function animate() {
 
             // remove invader + projectile (invader hit, projectile fired)
             if (invaderFound && projectileFound) {
+              score += 100
+              scoreEl.innerHTML = score
               createParticles({
-                object: invader, 
+                object: invader,
                 fades: true
               });
               createParticles({
@@ -520,9 +524,9 @@ function animate() {
                 color: 'pink',
                 fades: true,
               });
-
               grid.invaders.splice(i, 1);
               projectiles.splice(j, 1);
+
               // update width of invader grid
               if (grid.invaders.length > 0) {
                 const firstInvader = grid.invaders[0];
