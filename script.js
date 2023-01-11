@@ -739,11 +739,13 @@ addEventListener("keydown", ({ key }) => {
       d.style.color = "#000";
       break;
     case "s": // down
+    case "ArrowDown":
       keys.s.pressed = true;
       s.style.background = "#fff";
       s.style.color = "#000";
       break;
-    case "w": // up
+    case "w":
+    case "ArrowUp": // up
       keys.w.pressed = true;
       w.style.background = "#fff";
       w.style.color = "#000";
@@ -782,11 +784,13 @@ addEventListener("keyup", ({ key }) => {
       d.style.color = "#fff";
       break;
     case "s": // down
+    case "ArrowDown":
       keys.s.pressed = false;
       s.style.background = "transparent";
       s.style.color = "#fff";
       break;
     case "w": // up
+    case "ArrowUp":
       keys.w.pressed = false;
       w.style.background = "transparent";
       w.style.color = "#fff";

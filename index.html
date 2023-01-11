@@ -9,9 +9,14 @@
         font-family: sans-serif;
         font-size: 1.2rem;
     }
+
+    .controls div {
+        box-shadow: 0 10px 15px -3px rgba(179, 3, 249, 0.9)
+    }
 </style>
 
 <div style="position: relative;" id="ParentDiv">
+    <!-- Score -->
     <p
         style="
             position: fixed;
@@ -24,7 +29,9 @@
     >
         <span>Score:</span> <span id="scoreEl">0</span>
     </p>
+    <!-- Canvas -->
     <canvas></canvas>
+    <!-- Sub-Headings -->
     <p
         style="
             padding-top: 4rem;
@@ -34,8 +41,8 @@
     >
         Controls:
     </p>
-
-    <div style="display: flex">
+    <!-- Controls -->
+    <div class="controls" style="display: flex">
         <div class="w" style="
             border-radius: 5px;
             border: 2px solid #fff;
@@ -78,9 +85,10 @@
             D
         </div>
     </div>
-    <div style="
+    <div class="controls" style="
         margin-left: 4rem;
         margin-top: 1.5rem;
+        display: flex;
         ">
         <div class="spacebar" style="
             border-radius: 5px;
@@ -93,6 +101,17 @@
             ">
             SPACEBAR
         </div>
+
+        <p
+            style="
+                color: #fff;
+                margin-left: auto;
+                padding-right: 4rem;
+                align-self: flex-end;
+            "
+        >
+            © Wyne Ybanez
+        </p>
     </div>
 </div>
 
