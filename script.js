@@ -312,6 +312,56 @@ class InvaderProjectile {
   }
 }
 
+/**
+ * Bomb Class (object params: position, velocity)
+ * - position (x,y)
+ * - velocity (x,y)
+ */
+
+class Bomb {
+  static radius = 30
+  constructor({ position, velocity }) {
+    this.position = position
+    this.velocity = velocity
+    this.radius = 0
+    this.color = 'red'
+    this.opacity = 1
+    this.active = false
+
+    gsap.to(this, {
+      radius: 30
+    })
+  }
+
+  draw() {
+    c.save()
+    c.globalAlpha = this.opacity
+    c.beginPath()
+    c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
+    c.closePath()
+    c.fillStyle = this.color
+    c.fill()
+    c.restore()
+  }
+
+  update() {
+    this.draw()
+    this.position.x += this.velocity.x
+    this.position.y += this.velocity.y
+
+    if (
+      this.position.x + this.radius + this.velocity.x >= canvas.width ||
+      this.position.x - this.radius + this.velocity.x <= 0
+    ) {
+      this.velocity.x = -this.velocity.x
+    } else if (
+      this.position.y + this.radius + this.velocity.y >= canvas.height ||
+      this.position.y - this.radius + this.velocity.y <= 0
+    )
+      this.velocity.y = -this.velocity.y
+  }
+}
+
 // =============== END OF CLASSES =================
 
 /**
@@ -321,11 +371,33 @@ class InvaderProjectile {
  * - create multiple invader grids
  * - set control keys
  */
-const player = new Player();
-const projectiles = [];
-const invaderGrids = [new InvaderGrid()];
-const invaderProjectiles = [];
-const particles = [];
+const player = new Player()
+const projectiles = []
+const invaderGrids = [new InvaderGrid()]
+const invaderProjectiles = []
+const particles = []
+const bombs = [
+  new Bomb({
+    position: {
+      x: randomBetween(Bomb.radius, canvas.width - Bomb.radius),
+      y: randomBetween(Bomb.radius, canvas.height - Bomb.radius),
+    },
+    velocity: {
+      x: (Math.random() - 0.5) * 6,
+      y: (Math.random() - 0.5) * 6,
+    },
+  }),
+  new Bomb({
+    position: {
+      x: randomBetween(Bomb.radius, canvas.width - Bomb.radius),
+      y: randomBetween(Bomb.radius, canvas.width - Bomb.radius),
+    },
+    velocity: {
+      x: (Math.random() - 0.5) * 6,
+      y: (Math.random() - 0.5) * 6,
+    },
+  }),
+];
 
 const keys = {
   a: {
@@ -357,6 +429,13 @@ let randomInteveral = Math.floor(Math.random() * 500 + 500);
 let game = {
   over: false,
   active: true
+}
+
+/**
+ * Random Between 2 numbers
+ */
+function randomBetween(min, max) {
+  return Math.random() * (max - min) + min
 }
 
 /**
@@ -411,6 +490,16 @@ function animate() {
   requestAnimationFrame(animate);
   c.fillStyle = "black";
   c.fillRect(0, 0, canvas.width, canvas.height);
+
+  // spawn bombs
+  for (let i = bombs.length - 1; i >= 0; i--) {
+    const bomb = bombs[i];
+
+    if (bomb.opacity <= 0) {
+      bombs.splice(i, 1);
+    } else bomb.update();
+  }
+
   player.update();
 
   particles.forEach((particle, i) => {
