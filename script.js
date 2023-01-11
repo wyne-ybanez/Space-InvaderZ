@@ -1,5 +1,11 @@
 const scoreEl = document.querySelector("#scoreEl");
 const canvas = document.querySelector("canvas");
+const w = document.querySelector(".w");
+const a = document.querySelector(".a");
+const s = document.querySelector(".s");
+const d = document.querySelector(".d");
+const spacebar = document.querySelector(".spacebar");
+
 const c = canvas.getContext("2d"); // get canvas, set it to 2D
 
 canvas.width = innerWidth;
@@ -562,15 +568,27 @@ function animate() {
   })
 
   // player projectiles
-  projectiles.forEach((projectile, index) => {
+  for (let i = projectiles.length - 1; i >= 0; i--) {
+    const projectile = projectiles[i]
+
+    for (let j = bombs.length - 1; j >= 0; j--) {
+      const bomb = bombs[j]
+
+      // if projectile touches bomb remove projectile
+      if (Math.hypot(
+        projectile.position.x - bomb.position.x,
+        projectile.position.y - bomb.position.y
+        ) < projectile.radius + bomb.radius) {
+          projectiles.splice(i , 1)
+      }
+    }
+
     if (projectile.position.y + projectile.radius <= 0) {
-      setTimeout(() => {
-        projectiles.splice(index, 1); // take the one projectile out of the array and remove from the scene
-      }, 0);
+        projectiles.splice(i, 1); // take the one projectile out of the array and remove from the scene
     } else {
       projectile.update();
     }
-  });
+  }
 
   // invader grids creation
   invaderGrids.forEach((grid, gridIndex) => {
@@ -711,16 +729,24 @@ addEventListener("keydown", ({ key }) => {
     case "a": // left
     case "ArrowLeft":
       keys.a.pressed = true;
+      a.style.background = "#fff";
+      a.style.color = "#000";
       break;
     case "d": // right
     case "ArrowRight":
       keys.d.pressed = true;
+      d.style.background = "#fff";
+      d.style.color = "#000";
       break;
     case "s": // down
       keys.s.pressed = true;
+      s.style.background = "#fff";
+      s.style.color = "#000";
       break;
     case "w": // up
       keys.w.pressed = true;
+      w.style.background = "#fff";
+      w.style.color = "#000";
       break;
     case " ": // space, shoot by adding projectile to array
       projectiles.push(
@@ -735,6 +761,8 @@ addEventListener("keydown", ({ key }) => {
           },
         })
       );
+      spacebar.style.background = "#fff";
+      spacebar.style.color = "#000";
       break;
   }
 });
@@ -744,18 +772,28 @@ addEventListener("keyup", ({ key }) => {
     case "a": // left
     case "ArrowLeft":
       keys.a.pressed = false;
+      a.style.background = "transparent";
+      a.style.color = "#fff";
       break;
     case "d": // right
     case "ArrowRight":
       keys.d.pressed = false;
+      d.style.background = "transparent";
+      d.style.color = "#fff";
       break;
     case "s": // down
       keys.s.pressed = false;
+      s.style.background = "transparent";
+      s.style.color = "#fff";
       break;
     case "w": // up
       keys.w.pressed = false;
+      w.style.background = "transparent";
+      w.style.color = "#fff";
       break;
     case " ": // space
+      spacebar.style.background = "transparent";
+      spacebar.style.color = "#fff";
       break;
   }
 });
