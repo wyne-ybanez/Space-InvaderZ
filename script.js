@@ -330,7 +330,7 @@ class Bomb {
     this.position = position
     this.velocity = velocity
     this.radius = 0
-    this.color = 'red'
+    this.color = 'orangered'
     this.opacity = 1
     this.active = false
 
@@ -366,6 +366,23 @@ class Bomb {
     )
       this.velocity.y = -this.velocity.y
   }
+
+  explode() {
+    this.active = true;
+    this.velocity.x = 0;
+    this.velocity.y = 0;
+
+    gsap.to(this, {
+      radius: 500,
+      color: 'white',
+    })
+
+    gsap.to(this, {
+      delay: .5,
+      opacity: 0,
+      duration: 1,
+    });
+  }
 }
 
 // =============== END OF CLASSES =================
@@ -382,28 +399,7 @@ const projectiles = []
 const invaderGrids = [new InvaderGrid()]
 const invaderProjectiles = []
 const particles = []
-const bombs = [
-  new Bomb({
-    position: {
-      x: randomBetween(Bomb.radius, canvas.width - Bomb.radius),
-      y: randomBetween(Bomb.radius, canvas.height - Bomb.radius),
-    },
-    velocity: {
-      x: (Math.random() - 0.5) * 6,
-      y: (Math.random() - 0.5) * 6,
-    },
-  }),
-  new Bomb({
-    position: {
-      x: randomBetween(Bomb.radius, canvas.width - Bomb.radius),
-      y: randomBetween(Bomb.radius, canvas.width - Bomb.radius),
-    },
-    velocity: {
-      x: (Math.random() - 0.5) * 6,
-      y: (Math.random() - 0.5) * 6,
-    },
-  }),
-];
+const bombs = [];
 
 const keys = {
   a: {
@@ -488,6 +484,29 @@ function createParticles({ object, color, radius, fades }) {
 }
 
 /**
+ * Create Score Label
+ */
+function createScoreLabel({ score = 100 , object }) {
+  const scoreLabel = document.createElement("label");
+  scoreLabel.innerHTML = score;
+  scoreLabel.style.position = "absolute";
+  scoreLabel.style.color = "white";
+  scoreLabel.style.top = object.position.y + "px";
+  scoreLabel.style.left = object.position.x + "px";
+  scoreLabel.style.userSelect = "none";
+  document.querySelector("#ParentDiv").appendChild(scoreLabel);
+
+  gsap.to(scoreLabel, {
+    opacity: 0,
+    y: -30,
+    duration: 0.75,
+    onComplete: () => {
+      document.querySelector("#ParentDiv").removeChild(scoreLabel);
+    },
+  });
+}
+
+/**
  * Process Game Animation
  */
 function animate() {
@@ -496,6 +515,21 @@ function animate() {
   requestAnimationFrame(animate);
   c.fillStyle = "black";
   c.fillRect(0, 0, canvas.width, canvas.height);
+
+  if (frames % 200 === 0) {
+    bombs.push(
+      new Bomb({
+        position: {
+          x: randomBetween(Bomb.radius, canvas.width - Bomb.radius),
+          y: randomBetween(Bomb.radius, canvas.width - Bomb.radius),
+        },
+        velocity: {
+          x: (Math.random() - 0.5) * 6,
+          y: (Math.random() - 0.5) * 6,
+        },
+      })
+    );
+  }
 
   // spawn bombs
   for (let i = bombs.length - 1; i >= 0; i--) {
@@ -578,8 +612,9 @@ function animate() {
       if (Math.hypot(
         projectile.position.x - bomb.position.x,
         projectile.position.y - bomb.position.y
-        ) < projectile.radius + bomb.radius) {
+        ) < projectile.radius + bomb.radius && !bomb.active) {
           projectiles.splice(i , 1)
+          bomb.explode()
       }
     }
 
@@ -601,8 +636,40 @@ function animate() {
       );
     }
 
-    grid.invaders.forEach((invader, i) => {
+    for (let i = grid.invaders.length - 1; i >= 0; i--) {
+      const invader = grid.invaders[i]
       invader.update({ velocity: grid.velocity }); // render out each invader in array
+
+      for (let j = bombs.length - 1; j >= 0; j--) {
+        const bomb = bombs[j];
+        const invaderRadius = 15;
+
+        // if bomb touches invader, remove invader
+        if (
+          Math.hypot(
+            invader.position.x - bomb.position.x,
+            invader.position.y - bomb.position.y
+          ) <
+            invaderRadius + bomb.radius &&
+          bomb.active
+        ) {
+          score += 50;
+          scoreEl.innerHTML = score;
+
+          grid.invaders.splice(i, 1);
+          createScoreLabel({
+            score: 50,
+            object: invader,
+          });
+          createParticles({
+            object: invader,
+            color: "white",
+            radius: Math.random() * 4,
+            fades: true,
+          });
+        }
+      }
+
       // projectiles hit enemy
       projectiles.forEach((projectile, j) => {
         if (
@@ -626,23 +693,8 @@ function animate() {
             if (invaderFound && projectileFound) {
               score += 100
               scoreEl.innerHTML = score
-              // dynamic score label
-              const scoreLabel = document.createElement('label')
-              scoreLabel.innerHTML = 100
-              scoreLabel.style.position = 'absolute'
-              scoreLabel.style.color = 'white'
-              scoreLabel.style.top = invader.position.y + 'px'
-              scoreLabel.style.left = invader.position.x + 'px'
-              scoreLabel.style.userSelect = 'none'
-              document.querySelector("#ParentDiv").appendChild(scoreLabel)
-
-              gsap.to(scoreLabel, {
-                opacity: 0,
-                y: -30,
-                duration: .75,
-                onComplete: () => {
-                  document.querySelector("#ParentDiv").removeChild(scoreLabel)
-                }
+              createScoreLabel({
+                object: invader,
               });
 
               createParticles({
@@ -673,7 +725,7 @@ function animate() {
           }, 0);
         }
       });
-    });
+    }
   });
 
   // spawning enemies
