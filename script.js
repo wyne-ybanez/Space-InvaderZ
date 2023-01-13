@@ -1,3 +1,11 @@
+/*
+We are using a lot of for loops - looping from the back of an array and splicing
+We do this so we only splice items we have already rendered.
+
+Anything unrendered is left untouched.
+Meaning, no flashes, no timeouts, seamless experience.
+*/
+
 const scoreEl = document.querySelector("#scoreEl");
 const canvas = document.querySelector("canvas");
 const w = document.querySelector(".w");
@@ -49,6 +57,9 @@ class Player {
         y: canvas.height - this.body.height - margin,
       };
     };
+
+    this.particles = []
+    this.frames = 0
   }
 
   //====== Methods
@@ -95,6 +106,26 @@ class Player {
       this.draw();
       this.position.x += this.velocity.x;
       this.position.y += this.velocity.y;
+    }
+
+    this.frames++
+
+    if (this.frames % 2 === 0) {
+      this.particles.push(
+        new Particle({
+          position: {
+            x: this.position.x + (this.body.width / 2),
+            y: this.position.y + this.body.height,
+          },
+          velocity: {
+            x: (Math.random() - 0.5) * 1.3,
+            y: 1.4,
+          },
+          radius: Math.random() * 2,
+          color: "skyblue",
+          fades: true
+        })
+      );
     }
   }
 }
@@ -586,7 +617,7 @@ function endGame() {
 }
 
 /**
- * Animation Process
+ * Animation Loop
  */
 function animate() {
   if (!game.active) return;
@@ -609,7 +640,7 @@ function animate() {
       new PowerUp({
         position: {
           x: 0,
-          y: Math.random() * 300 + 15,
+          y: Math.random() * 500 + 15,
         },
         velocity: {
           x: 5,
@@ -645,6 +676,11 @@ function animate() {
 
   // spawn Player
   player.update();
+
+  for (let i = player.particles.length - 1; i >= 0; i--) {
+    const particle = player.particles[i]
+    particle.update();
+  }
 
   // initiates particles
   particles.forEach((particle, i) => {
@@ -847,11 +883,11 @@ function animate() {
     } // end looping over grid.invaders
   });
 
-  // spawning enemies
+  // spawn enemies
   if (frames % randomInteveral === 0) {
-    spawnBuffer = (spawnBuffer < 0) ? 50 : spawnBuffer; // spawnBuffer cannot be a negative value
+    spawnBuffer = (spawnBuffer < 0) ? 10 : spawnBuffer; // spawnBuffer cannot be a negative value
     invaderGrids.push(new InvaderGrid());
-    randomInteveral = Math.floor(Math.random() * 400 + spawnBuffer);
+    randomInteveral = Math.floor((Math.random() * 500) + spawnBuffer);
     frames = 0;
     spawnBuffer -= 100;
   }
