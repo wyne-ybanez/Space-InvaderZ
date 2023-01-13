@@ -288,7 +288,7 @@ class InvaderGrid {
 
     // if Invader Grid hits canvas edge
     if (this.position.x + this.width >= canvas.width || this.position.x <= 0) {
-      this.velocity.x = -this.velocity.x * 1.05;
+      this.velocity.x = -this.velocity.x * 1.15;
       this.velocity.y = 30;
     }
   }
@@ -459,7 +459,8 @@ const keys = {
 
 let frames = 0;
 let score = 0;
-let randomInteveral = Math.floor(Math.random() * 500 + 500);
+let randomInteveral = Math.floor(Math.random() * 400 + 500);
+let spawnBuffer = 500;
 let game = {
   over: false,
   active: true
@@ -473,7 +474,7 @@ function randomBetween(min, max) {
 }
 
 /**
- * Creates Background Particles
+ * Background Particles Creation
  */
 for (let i = 0; i < 100; i++) {
   particles.push(
@@ -493,7 +494,7 @@ for (let i = 0; i < 100; i++) {
 }
 
 /**
- * Create Explosion Particles
+ * Explosion Particles
  */
 function createParticles({ object, color, radius, fades }) {
   for (let i = 0; i < 15; i++) {
@@ -516,7 +517,7 @@ function createParticles({ object, color, radius, fades }) {
 }
 
 /**
- * Create Score Label
+ * Score Label Creation
  */
 function createScoreLabel({ score = 100 , object }) {
   const scoreLabel = document.createElement("label");
@@ -539,7 +540,24 @@ function createScoreLabel({ score = 100 , object }) {
 }
 
 /**
- * Process Game Animation
+ * Rectangular Collision Detection
+ */
+function rectangularCollision({
+  rectangle1,
+  rectangle2
+}) {
+  return (
+    rectangle1.position.y <= // height detection
+      rectangle2.position.y + rectangle2.body.height &&
+    rectangle1.position.y >= rectangle2.position.y &&
+    rectangle1.position.x >= // width detection
+      rectangle2.position.x &&
+    rectangle1.position.x <= rectangle2.position.x + rectangle2.body.width
+  );
+}
+
+/**
+ * Animation Process
  */
 function animate() {
   if (!game.active) return;
@@ -557,7 +575,7 @@ function animate() {
   }
 
   // spawning powerups
-  if (frames % 500 === 0) {
+  if (frames % 400 === 0) {
     powerUps.push(
       new PowerUp({
         position: {
@@ -573,7 +591,7 @@ function animate() {
   }
 
   // spawn Bombs
-  if (frames % 400 === 0) {
+  if (frames % 300 === 0) {
     bombs.push(
       new Bomb({
         position: {
@@ -627,12 +645,10 @@ function animate() {
 
     // projectile hits player
     if (
-      invaderProjectile.position.y <= // height detection
-        player.position.y + player.body.height &&
-      invaderProjectile.position.y >= player.position.y &&
-      invaderProjectile.position.x >= // width detection
-        player.position.x &&
-      invaderProjectile.position.x <= player.position.x + player.body.width
+      rectangularCollision({
+        rectangle1: invaderProjectile,
+        rectangle2: player
+      })
     ) {
       setTimeout(() => {
         invaderProjectiles.splice(index, 1); // garbage collection
@@ -813,9 +829,11 @@ function animate() {
 
   // spawning enemies
   if (frames % randomInteveral === 0) {
+    spawnBuffer = (spawnBuffer < 0) ? 50 : spawnBuffer; // spawnBuffer cannot be a negative value
     invaderGrids.push(new InvaderGrid());
-    randomInteveral = Math.floor(Math.random() * 500 + 500);
+    randomInteveral = Math.floor(Math.random() * 400 + spawnBuffer);
     frames = 0;
+    spawnBuffer -= 100;
   }
 
   // Machine Gun PowerUp
