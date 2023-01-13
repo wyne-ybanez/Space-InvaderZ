@@ -557,6 +557,35 @@ function rectangularCollision({
 }
 
 /**
+ * End Game
+ */
+function endGame() {
+  console.log('You Lose')
+    setTimeout(() => {
+      player.opacity = 0;
+      game.over = true;
+    }, 0);
+
+    setTimeout(() => {
+      game.active = false;
+    }, 2000);
+
+    createParticles({
+      object: player,
+      color: "white",
+      radius: Math.random() * 3,
+      fades: true,
+    });
+    
+    createParticles({
+      object: player,
+      color: "white",
+      radius: Math.random() * 4,
+      fades: true,
+    });
+}
+
+/**
  * Animation Process
  */
 function animate() {
@@ -639,7 +668,7 @@ function animate() {
       canvas.height
     ) {
       setTimeout(() => {
-        invaderProjectiles.splice(index, 1); // take the one projectile out of the array and remove from the scene
+        invaderProjectiles.splice(index, 1); // take the one projectile out of the array and remove from the scene, starting from i
       }, 0);
     } else invaderProjectile.update();
 
@@ -650,26 +679,8 @@ function animate() {
         rectangle2: player
       })
     ) {
-      setTimeout(() => {
-        invaderProjectiles.splice(index, 1); // garbage collection
-        player.opacity = 0;
-        game.over = true;
-      }, 0);
-      setTimeout(() => {
-        game.active = false;
-      }, 2000);
-      createParticles({
-        object: player,
-        color: "white",
-        radius: Math.random() * 3,
-        fades: true,
-      });
-      createParticles({
-        object: player,
-        color: "white",
-        radius: Math.random() * 4,
-        fades: true,
-      });
+      invaderProjectiles.splice(index, 1); // garbage collection
+      endGame();
     }
   });
 
@@ -824,7 +835,16 @@ function animate() {
           }, 0);
         }
       });
-    }
+
+      // remove player if invader touches them
+      if (
+        rectangularCollision({
+          rectangle1: invader,
+          rectangle2: player
+        })) {
+        endGame();
+      }
+    } // end looping over grid.invaders
   });
 
   // spawning enemies
