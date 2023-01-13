@@ -31,6 +31,8 @@ class Player {
 
     this.rotation = 0;
     this.opacity = 1;
+    this.shadowColor = 'skyblue'
+    this.shadowBlur = 20
 
     // Image has loaded hence, set attributes
     image.onload = () => {
@@ -104,17 +106,18 @@ class Player {
  * - projectile radius can be static or dynamic
  */
 class Projectile {
-  constructor({ position, velocity }) {
+  constructor({ position, velocity, color = 'red' }) {
     this.position = position;
     this.velocity = velocity;
 
     this.radius = 5;
+    this.color = color;
   }
 
   draw() {
     c.beginPath();
     c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2); // creates a cirlce
-    c.fillStyle = "red";
+    c.fillStyle = this.color;
     c.fill();
     c.closePath();
   }
@@ -428,16 +431,7 @@ const invaderGrids = [new InvaderGrid()]
 const invaderProjectiles = []
 const particles = []
 const bombs = [];
-const powerUps = [new PowerUp({
-  position: {
-    x: 0,
-    y: 300,
-  },
-  velocity: {
-    x: 5,
-    y: 0,
-  }
-})];
+const powerUps = [];
 
 const keys = {
   a: {
@@ -548,21 +542,43 @@ function createScoreLabel({ score = 100 , object }) {
  * Process Game Animation
  */
 function animate() {
-  if (!game.active) return
+  if (!game.active) return;
   requestAnimationFrame(animate);
   c.fillStyle = "black";
   c.fillRect(0, 0, canvas.width, canvas.height);
 
-  powerUps.forEach(powerUp => {
-    powerUp.update();
-  })
+  // PowerUps garbage collection
+  for (let i = powerUps.length - 1; i >= 0; i--) {
+    const powerUp = powerUps[i];
 
-  if (frames % 200 === 0) {
+    if (powerUp.position.x - powerUp.radius >= canvas.width) {
+      powerUps.splice(i, 1);
+    } else powerUp.update();
+  }
+
+  // spawning powerups
+  if (frames % 500 === 0) {
+    powerUps.push(
+      new PowerUp({
+        position: {
+          x: 0,
+          y: Math.random() * 300 + 15,
+        },
+        velocity: {
+          x: 5,
+          y: 0,
+        },
+      })
+    )
+  }
+
+  // spawn Bombs
+  if (frames % 400 === 0) {
     bombs.push(
       new Bomb({
         position: {
           x: randomBetween(Bomb.radius, canvas.width - Bomb.radius),
-          y: randomBetween(Bomb.radius, canvas.width - Bomb.radius),
+          y: randomBetween(Bomb.radius, canvas.height - Bomb.radius),
         },
         velocity: {
           x: (Math.random() - 0.5) * 6,
@@ -572,7 +588,6 @@ function animate() {
     );
   }
 
-  // spawn bombs
   for (let i = bombs.length - 1; i >= 0; i--) {
     const bomb = bombs[i];
 
@@ -581,8 +596,10 @@ function animate() {
     } else bomb.update();
   }
 
+  // spawn Player
   player.update();
 
+  // initiates particles
   particles.forEach((particle, i) => {
     if (particle.position.y - particle.radius >= canvas.height) {
       particle.position.x = Math.random() * canvas.width;
@@ -595,14 +612,14 @@ function animate() {
         particles.splice(i, 1);
       }, 0);
     } else particle.update();
-  })
+  });
 
   // invader projectiles
   invaderProjectiles.forEach((invaderProjectile, index) => {
     if (
       invaderProjectile.position.y + invaderProjectile.height >=
       canvas.height
-      ){
+    ) {
       setTimeout(() => {
         invaderProjectiles.splice(index, 1); // take the one projectile out of the array and remove from the scene
       }, 0);
@@ -612,12 +629,10 @@ function animate() {
     if (
       invaderProjectile.position.y <= // height detection
         player.position.y + player.body.height &&
-      invaderProjectile.position.y >=
-        player.position.y &&
+      invaderProjectile.position.y >= player.position.y &&
       invaderProjectile.position.x >= // width detection
         player.position.x &&
-      invaderProjectile.position.x <=
-        player.position.x + player.body.width
+      invaderProjectile.position.x <= player.position.x + player.body.width
     ) {
       setTimeout(() => {
         invaderProjectiles.splice(index, 1); // garbage collection
@@ -631,8 +646,8 @@ function animate() {
         object: player,
         color: "white",
         radius: Math.random() * 3,
-        fades: true
-      })
+        fades: true,
+      });
       createParticles({
         object: player,
         color: "white",
@@ -640,22 +655,26 @@ function animate() {
         fades: true,
       });
     }
-  })
+  });
 
   // player projectiles
   for (let i = projectiles.length - 1; i >= 0; i--) {
-    const projectile = projectiles[i]
+    const projectile = projectiles[i];
 
     for (let j = bombs.length - 1; j >= 0; j--) {
-      const bomb = bombs[j]
+      const bomb = bombs[j];
 
       // if projectile touches bomb, remove projectile
-      if (Math.hypot(
-        projectile.position.x - bomb.position.x,
-        projectile.position.y - bomb.position.y
-        ) < projectile.radius + bomb.radius && !bomb.active) {
-          projectiles.splice(i , 1)
-          bomb.explode()
+      if (
+        Math.hypot(
+          projectile.position.x - bomb.position.x,
+          projectile.position.y - bomb.position.y
+        ) <
+          projectile.radius + bomb.radius &&
+        !bomb.active
+      ) {
+        projectiles.splice(i, 1);
+        bomb.explode();
       }
     }
 
@@ -668,22 +687,22 @@ function animate() {
           projectile.position.x - powerUp.position.x,
           projectile.position.y - powerUp.position.y
         ) <
-          projectile.radius + powerUp.radius
+        projectile.radius + powerUp.radius
       ) {
-        projectiles.splice(i, 1)
-        powerUps.splice(j, 1)
-        player.powerUp = 'MachineGun'
-          console.log('PowerUp Started')
+        projectiles.splice(i, 1);
+        powerUps.splice(j, 1);
+        player.powerUp = "MachineGun";
+        console.log("PowerUp Started");
 
         setTimeout(() => {
-          player.powerUp = null
-          console.log('PowerUp Ended')
-        }, 5000)
+          player.powerUp = null;
+          console.log("PowerUp Ended");
+        }, 10000);
       }
     }
 
     if (projectile.position.y + projectile.radius <= 0) {
-        projectiles.splice(i, 1); // take the one projectile out of the array and remove from the scene
+      projectiles.splice(i, 1); // take the one projectile out of the array and remove from the scene
     } else {
       projectile.update();
     }
@@ -701,7 +720,7 @@ function animate() {
     }
 
     for (let i = grid.invaders.length - 1; i >= 0; i--) {
-      const invader = grid.invaders[i]
+      const invader = grid.invaders[i];
       invader.update({ velocity: grid.velocity }); // render out each invader in array
 
       for (let j = bombs.length - 1; j >= 0; j--) {
@@ -755,19 +774,19 @@ function animate() {
 
             // remove invader + projectile (invader hit, projectile fired)
             if (invaderFound && projectileFound) {
-              score += 100
-              scoreEl.innerHTML = score
+              score += 100;
+              scoreEl.innerHTML = score;
               createScoreLabel({
                 object: invader,
               });
 
               createParticles({
                 object: invader,
-                fades: true
+                fades: true,
               });
               createParticles({
                 object: invader,
-                color: 'pink',
+                color: "pink",
                 fades: true,
               });
               grid.invaders.splice(i, 1);
@@ -799,7 +818,8 @@ function animate() {
     frames = 0;
   }
 
-  if (keys.space.pressed && player.powerUp === 'MachineGun') {
+  // Machine Gun PowerUp
+  if (keys.space.pressed && player.powerUp === "MachineGun") {
     projectiles.push(
       new Projectile({
         position: {
@@ -810,6 +830,7 @@ function animate() {
           x: 0,
           y: -10,
         },
+        color: "#3F5EF9",
       })
     );
   }
@@ -823,7 +844,10 @@ function animate() {
     player.rotation = -0.15;
   }
   // right
-  else if (keys.d.pressed && player.position.x + player.body.width <= canvas.width) {
+  else if (
+    keys.d.pressed &&
+    player.position.x + player.body.width <= canvas.width
+  ) {
     player.velocity.x = 7;
     player.rotation = 0.15;
   }
@@ -835,10 +859,7 @@ function animate() {
     player.velocity.y = 5;
   }
   // up
-  else if (
-    keys.w.pressed &&
-    player.position.y + player.body.height >= 0
-  ) {
+  else if (keys.w.pressed && player.position.y + player.body.height >= 0) {
     player.velocity.y = -5;
   }
   // stop
@@ -896,7 +917,7 @@ addEventListener("keydown", ({ key }) => {
           velocity: {
             x: 0,
             y: -10,
-          },
+          }
         })
       );
       spacebar.style.background = "#fff";
