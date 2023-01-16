@@ -102,11 +102,12 @@ class Player {
    * Update Player
    */
   update() {
-    if (this.imageLoad) {
-      this.draw();
-      this.position.x += this.velocity.x;
-      this.position.y += this.velocity.y;
-    }
+    if (!this.imageLoad) return
+    if (this.opacity !== 1) return
+
+    this.draw();
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
 
     this.frames++
 
@@ -319,7 +320,7 @@ class InvaderGrid {
 
     // if Invader Grid hits canvas edge
     if (this.position.x + this.width >= canvas.width || this.position.x <= 0) {
-      this.velocity.x = -this.velocity.x * 1.15;
+      this.velocity.x = -this.velocity.x * 1.25;
       this.velocity.y = 30;
     }
   }
@@ -336,8 +337,8 @@ class InvaderProjectile {
     this.position = position;
     this.velocity = velocity;
 
-    this.width = 3;
-    this.height = 10;
+    this.width = 6;
+    this.height = 15;
   }
 
   draw() {
@@ -456,15 +457,15 @@ class PowerUp {
  * - create multiple invader grids
  * - set control keys
  */
-const player = new Player()
-const projectiles = []
-const invaderGrids = [new InvaderGrid()]
-const invaderProjectiles = []
-const particles = []
-const bombs = [];
-const powerUps = [];
+let player = new Player()
+let projectiles = []
+let invaderGrids = [new InvaderGrid()]
+let invaderProjectiles = []
+let particles = []
+let bombs = [];
+let powerUps = [];
 
-const keys = {
+let keys = {
   a: {
     pressed: false,
   },
@@ -497,31 +498,65 @@ let game = {
   active: true
 }
 
-/**
- * Random Between 2 numbers
- */
-function randomBetween(min, max) {
-  return Math.random() * (max - min) + min
-}
+// Initialise Game
+function init() {
+  // restart all values
+  player = new Player();
+  projectiles = [];
+  invaderGrids = [new InvaderGrid()];
+  invaderProjectiles = [];
+  particles = [];
+  bombs = [];
+  powerUps = [];
+  keys = {
+    a: {
+      pressed: false,
+    },
+    d: {
+      pressed: false,
+    },
+    s: {
+      pressed: false,
+    },
+    w: {
+      pressed: false,
+    },
+    ArrowLeft: {
+      pressed: false,
+    },
+    ArrowRight: {
+      pressed: false,
+    },
+    space: {
+      pressed: false,
+    },
+  };
+  frames = 0;
+  score = 0;
+  randomInteveral = Math.floor(Math.random() * 400 + 500);
+  spawnBuffer = 500;
+  game = {
+    over: false,
+    active: true,
+  };
 
-/**
- * Background Particles Creation
- */
-for (let i = 0; i < 100; i++) {
-  particles.push(
-    new Particle({
-      position: {
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-      },
-      velocity: {
-        x: 0,
-        y: 0.4,
-      },
-      radius: Math.random() * 2,
-      color: 'white',
-    })
-  );
+  // Background Particles
+  for (let i = 0; i < 100; i++) {
+    particles.push(
+      new Particle({
+        position: {
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+        },
+        velocity: {
+          x: 0,
+          y: 0.4,
+        },
+        radius: Math.random() * 2,
+        color: "white",
+      })
+    );
+  }
 }
 
 /**
@@ -589,9 +624,12 @@ function rectangularCollision({
 
 /**
  * End Game
+ * 
+ * - makes player disappear
+ * - stops game
+ * - player explosion particles
  */
 function endGame() {
-  console.log('You Lose')
     setTimeout(() => {
       player.opacity = 0;
       game.over = true;
@@ -599,6 +637,7 @@ function endGame() {
 
     setTimeout(() => {
       game.active = false;
+      document.querySelector('#restartScreen').style.display = 'flex'
     }, 2000);
 
     createParticles({
@@ -607,7 +646,7 @@ function endGame() {
       radius: Math.random() * 3,
       fades: true,
     });
-    
+
     createParticles({
       object: player,
       color: "white",
@@ -680,6 +719,10 @@ function animate() {
   for (let i = player.particles.length - 1; i >= 0; i--) {
     const particle = player.particles[i]
     particle.update();
+
+    if (particle.opacity === 0) {   // particle garbage collection if player dies
+      player.particles[i].splice(i, 1)
+    }
   }
 
   // initiates particles
@@ -945,6 +988,37 @@ function animate() {
 }
 
 /**
+ * Start Game
+ * - when button is clicked on game ui
+ */
+document.querySelector('#startButton').addEventListener('click',
+  () => {
+    document.querySelector("#startScreen").style.display = 'none';
+    document.querySelector("#scoreContainer").style.display = "block";
+    document.querySelector("#controls").style.display = "block";
+    document.querySelector(".w").style.display = "block";
+    document.querySelector(".a").style.display = "block";
+    document.querySelector(".s").style.display = "block";
+    document.querySelector(".d").style.display = "block";
+    document.querySelector(".spacebar").style.display = "block";
+    init()
+    animate()
+  }
+)
+
+/**
+ * Restart Game
+ * - when button is clicked on game ui
+ */
+document.querySelector('#restartButton').addEventListener('click',
+  () => {
+    document.querySelector("#restartScreen").style.display = 'none';
+    init()
+    animate()
+  }
+)
+
+/**
  * Player Movement Monitor
  * - monitor key down event actions (using object destructuring)
  * - monitor key up event actions
@@ -1044,6 +1118,13 @@ const random_hex_color_code = () => {
   return "#" + n.slice(0, 6);
 };
 
+/**
+ * Random Between 2 numbers
+ */
+function randomBetween(min, max) {
+  return Math.random() * (max - min) + min
+}
+
 player
   ? console.log("Player: Spawned [✓]")
   : console.log("Player: Not Spawning [x]");
@@ -1055,6 +1136,3 @@ invaderGrids
 projectiles
   ? console.log("Projectiles: Loaded [✓] ")
   : console.log("Projectiles: Not Loaded [x]");
-
-
-animate();

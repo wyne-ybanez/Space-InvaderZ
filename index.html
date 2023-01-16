@@ -11,7 +11,7 @@
     }
 
     .controls div {
-        box-shadow: 0 10px 15px -3px rgba(179, 3, 249, 0.9)
+        box-shadow: 0 10px 15px -3px rgba(3, 249, 208, 0.9);
     }
 
     .w,
@@ -19,18 +19,54 @@
     .s,
     .d,
     .spacebar {
-        width: 2.7rem;
+        width: 2.5rem;
         border-radius: 5px;
         border: 2px solid gray;
         color: #fff;
         padding: 0.7rem;
         text-align: center;
+        display: none;
+    }
+
+    .game-ui {
+        position: absolute;
+        top: 0;
+        right: 0%;
+        bottom: 0;
+        left: 0%;
+        background: url('./img/startScreenBackground.png');
+        z-index: 20;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        flex-direction: column;
+    }
+
+    .game-ui .game-title {
+        text-align: center;
+    }
+
+    .game-ui .start-button,
+    .game-ui .restart-button {
+        position: absolute;
+        color: white;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        left: 50%;
+    }
+
+    #restartScreen {
+        display: none;
     }
 </style>
 
 <div style="position: relative;" id="ParentDiv">
-    <!-- Score -->
-    <p
+    <!-- score -->
+    <p  id="scoreContainer"
         style="
             position: fixed;
             z-index: 10;
@@ -38,18 +74,60 @@
             left: 1.5rem;
             top: 1.5rem;
             margin: 0;
+            display: none;
         "
     >
         <span>Score:</span> <span id="scoreEl">0</span>
     </p>
-    <!-- Canvas -->
+    <!-- canvas -->
     <canvas></canvas>
-    <!-- Sub-Headings -->
-    <p
+
+    <!-- background container -->
+    <div class="game-ui" id="startScreen">
+        <div class="game-title">
+            <h1 style="color: white">Space Invaders</h1>
+        </div>
+        <!-- button -->
+        <div
+            id="startButton"
+            style="
+                cursor: pointer;
+                position: relative;
+                display: inline-block;
+            "
+        >
+            <img src="./img/button.png" alt="Start Button">
+            <span class="start-button">Start</span>
+        </div>
+    </div>
+
+    <!-- restart screen -->
+    <!-- background container -->
+    <div class="game-ui" id="restartScreen">
+        <div class="game-title">
+            <h1 style="color: white">Game Over</h1>
+        </div>
+        <!-- button -->
+        <div
+            id="restartButton"
+            style="
+                cursor: pointer;
+                position: relative;
+                display: inline-block;
+            "
+        >
+            <img src="./img/button.png" alt="Restart Button">
+            <span class="restart-button">Restart</span>
+        </div>
+    </div>
+
+    <!-- sub-headings -->
+    <p  id="controls"
         style="
             padding-top: 4rem;
             padding-left: 4rem;
             color: #fff;
+            display: none;
         "
     >
         Controls:
@@ -88,7 +166,7 @@
         ">
         <div class="spacebar" style="
             position: absolute;
-            width: 18.8rem;
+            width: 17.98rem;
             ">
             SPACEBAR
         </div>
