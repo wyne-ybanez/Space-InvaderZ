@@ -4,6 +4,13 @@ const audio = {
   backgroundMusic: new Howl({
     src: "./audio/backgroundMusic.wav",
     loop: true,
+    volume: 0.3,
+  }),
+  battle: new Howl({
+    src: "./audio/battle.wav",
+    loop: true,
+    volume: 0.5,
+    autoplay: true,
   }),
   bomb: new Howl({
     src: "./audio/bomb.mp3",

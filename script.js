@@ -24,6 +24,7 @@ let millisecondsPrev = window.performance.now(); // amount of milliseconds that 
 
 const c = canvas.getContext("2d"); // get canvas, set it to 2D
 
+audio.battle.play();
 canvas.width = innerWidth;
 canvas.height = innerHeight / 1.5;
 
@@ -1028,6 +1029,7 @@ function animate() {
  */
 document.querySelector('#startButton').addEventListener('click',
   () => {
+    audio.battle.stop()
     audio.backgroundMusic.play();
     audio.select.play();
 
