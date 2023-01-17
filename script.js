@@ -1,9 +1,9 @@
 /*
-We are using a lot of for loops - looping from the back of an array and splicing
-We do this so we only splice items we have already rendered.
+  We are using a lot of 'for loops' - looping from the back of an array and splicing
+  We do this so we only splice items we have already rendered.
 
-Anything unrendered is left untouched.
-Meaning, no flashes, no timeouts, seamless experience.
+  Anything unrendered is left untouched.
+  Meaning, no flashes, no timeouts, seamless experience.
 */
 
 const scoreEl = document.querySelector("#scoreEl");
@@ -13,6 +13,9 @@ const a = document.querySelector(".a");
 const s = document.querySelector(".s");
 const d = document.querySelector(".d");
 const spacebar = document.querySelector(".spacebar");
+const startScreen = document.querySelector("#startScreen");
+const scoreContainer = document.querySelector("#scoreContainer");
+const controls = document.querySelector("#controls");
 
 const c = canvas.getContext("2d"); // get canvas, set it to 2D
 
@@ -256,6 +259,7 @@ class Invader {
   }
 
   shoot(invaderProjectiles) {
+    audio.enemyShoot.play();
     invaderProjectiles.push(
       new InvaderProjectile({
         position: {
@@ -403,6 +407,7 @@ class Bomb {
   }
 
   explode() {
+    audio.bomb.play();
     this.active = true;
     this.velocity.x = 0;
     this.velocity.y = 0;
@@ -630,6 +635,7 @@ function rectangularCollision({
  * - player explosion particles
  */
 function endGame() {
+    audio.gameOver.play();
     setTimeout(() => {
       player.opacity = 0;
       game.over = true;
@@ -799,6 +805,7 @@ function animate() {
         powerUps.splice(j, 1);
         player.powerUp = "MachineGun";
         console.log("PowerUp Started");
+        audio.bonus.play();
 
         setTimeout(() => {
           player.powerUp = null;
@@ -878,7 +885,7 @@ function animate() {
               (projectile2) => projectile2 === projectile
             );
 
-            // remove invader + projectile (invader hit, projectile fired)
+            // projectile hits enemy
             if (invaderFound && projectileFound) {
               score += 100;
               scoreEl.innerHTML = score;
@@ -895,6 +902,9 @@ function animate() {
                 color: "pink",
                 fades: true,
               });
+
+              // singular projectile hits an enemy
+              audio.explode.play();
               grid.invaders.splice(i, 1);
               projectiles.splice(j, 1);
 
@@ -937,6 +947,7 @@ function animate() {
 
   // Machine Gun PowerUp
   if (keys.space.pressed && player.powerUp === "MachineGun") {
+    audio.laser.play();
     projectiles.push(
       new Projectile({
         position: {
@@ -993,14 +1004,17 @@ function animate() {
  */
 document.querySelector('#startButton').addEventListener('click',
   () => {
-    document.querySelector("#startScreen").style.display = 'none';
-    document.querySelector("#scoreContainer").style.display = "block";
-    document.querySelector("#controls").style.display = "block";
-    document.querySelector(".w").style.display = "block";
-    document.querySelector(".a").style.display = "block";
-    document.querySelector(".s").style.display = "block";
-    document.querySelector(".d").style.display = "block";
-    document.querySelector(".spacebar").style.display = "block";
+    audio.backgroundMusic.play();
+    audio.select.play();
+
+    startScreen.style.display = "none";
+    scoreContainer.style.display = "block";
+    controls.style.display = "block";
+    w.style.display = "block";
+    a.style.display = "block";
+    s.style.display = "block";
+    d.style.display = "block";
+    spacebar.style.display = "block";
     init()
     animate()
   }
@@ -1012,6 +1026,7 @@ document.querySelector('#startButton').addEventListener('click',
  */
 document.querySelector('#restartButton').addEventListener('click',
   () => {
+    audio.select.play()
     document.querySelector("#restartScreen").style.display = 'none';
     init()
     animate()
@@ -1056,6 +1071,7 @@ addEventListener("keydown", ({ key }) => {
 
       if (player.powerUp === 'MachineGun') return
 
+      audio.shoot.play()
       projectiles.push(
         new Projectile({
           position: {

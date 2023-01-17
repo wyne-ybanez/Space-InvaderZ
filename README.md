@@ -17,12 +17,6 @@ Deployed Site: https://space-invaderz-ultra-wyne.netlify.app/
 
 &nbsp;
 
-## UX
-
-### Strategy
-
-...
-
 ### Scope
 
 **Basics:**
@@ -50,38 +44,6 @@ Deployed Site: https://space-invaderz-ultra-wyne.netlify.app/
 - Spaceship sprite animation
 - Start and Game Over UI
 - Sound effects and Music
-
-### Structure
-
-The following main pages will be implemented:
-
-- Base Page - index.html
-
-...
-### Skeleton
-
-- Page: <br>
-  ![Start](public/images/...)
-
-
-### Surface
-
-#### Frameworks
-
-- Main template frameworks used
-    * ...
-
-#### Colour Scheme
-
-- Main Colors
-    * ...
-
-- Secondary Colors, used for icons
-    * ...
-
-#### Fonts
-
-- ...
 
 &nbsp;
 
@@ -152,22 +114,13 @@ Here is a link that can explain this process further. [Click Here](https://help.
 
 &nbsp;
 
-## References
-
-### External Solutions:
-- ...
-
-### Content
+## Content & Media
 
 Special thanks to these content creators for their free content.
 
 - GameSupplyGuy for " 200+ Space Sound Effects (Various Futuristic SFX) "
 - Cwupcwake for " Basic game 8bit game sound "
 - Goose Ninja for " Space Music Pack by Goose Ninja"
-
-### Media
-
-- ...
 
 &nbsp;
 
@@ -180,3 +133,5 @@ Special thanks to these content creators for their free content.
 ## Acknowledgements
 
 - Special Thanks to Christopher Lis for his tutorial on how to create this game and to develop it further.
+
+- Thanks to friends and family for playing this game and testing it our for me.
