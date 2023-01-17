@@ -1004,6 +1004,16 @@ function animate() {
   else if (keys.w.pressed && player.position.y + player.body.height >= 0) {
     player.velocity.y = -5;
   }
+  // stoppers 
+  else if (
+    player.position.y + player.body.height === canvas.height ||
+    player.body.height >= canvas.height ||
+    player.rotation >= canvas.height
+    ) {
+    player.rotation = 0;
+    player.velocity.x = 0;
+    player.velocity.y = 0;
+  }
   // stop
   else {
     player.velocity.x = 0;
