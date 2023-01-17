@@ -17,6 +17,11 @@ const startScreen = document.querySelector("#startScreen");
 const scoreContainer = document.querySelector("#scoreContainer");
 const controls = document.querySelector("#controls");
 
+let spawnBuffer = 500;
+let fps = 60;
+let fpsInterval = 1000 / fps
+let millisecondsPrev = window.performance.now(); // amount of milliseconds that pass during as js code loads (100ms)
+
 const c = canvas.getContext("2d"); // get canvas, set it to 2D
 
 canvas.width = innerWidth;
@@ -497,7 +502,6 @@ let keys = {
 let frames = 0;
 let score = 0;
 let randomInteveral = Math.floor(Math.random() * 400 + 500);
-let spawnBuffer = 500;
 let game = {
   over: false,
   active: true
@@ -670,12 +674,20 @@ function animate() {
   c.fillStyle = "black";
   c.fillRect(0, 0, canvas.width, canvas.height);
 
-  // PowerUps garbage collection
+  // frame rate control
+  const millisecondsNow = window.performance.now(); // this keeps increasing in animation loop
+  const elapsed = millisecondsNow - millisecondsPrev;
+
+  if (elapsed < fpsInterval) return;
+
+  // at 60fps, we want 16.66ms (1000ms / 60fps)
+  millisecondsPrev = millisecondsNow - (elapsed % fpsInterval) // 3.34
+
+  // Initiate PowerUps
   for (let i = powerUps.length - 1; i >= 0; i--) {
     const powerUp = powerUps[i];
-
     if (powerUp.position.x - powerUp.radius >= canvas.width) {
-      powerUps.splice(i, 1);
+      powerUps.splice(i, 1); // garbage collection
     } else powerUp.update();
   }
 
@@ -692,7 +704,7 @@ function animate() {
           y: 0,
         },
       })
-    )
+    );
   }
 
   // spawn Bombs
@@ -723,11 +735,12 @@ function animate() {
   player.update();
 
   for (let i = player.particles.length - 1; i >= 0; i--) {
-    const particle = player.particles[i]
+    const particle = player.particles[i];
     particle.update();
 
-    if (particle.opacity === 0) {   // particle garbage collection if player dies
-      player.particles[i].splice(i, 1)
+    if (particle.opacity === 0) {
+      // particle garbage collection if player dies
+      player.particles[i].splice(i, 1);
     }
   }
 
@@ -761,7 +774,7 @@ function animate() {
     if (
       rectangularCollision({
         rectangle1: invaderProjectile,
-        rectangle2: player
+        rectangle2: player,
       })
     ) {
       invaderProjectiles.splice(index, 1); // garbage collection
@@ -803,7 +816,7 @@ function animate() {
       ) {
         projectiles.splice(i, 1);
         powerUps.splice(j, 1);
-        player.powerUp = "MachineGun";
+        player.powerUp = "Laser";
         console.log("PowerUp Started");
         audio.bonus.play();
 
@@ -929,8 +942,9 @@ function animate() {
       if (
         rectangularCollision({
           rectangle1: invader,
-          rectangle2: player
-        })) {
+          rectangle2: player,
+        })
+      ) {
         endGame();
       }
     } // end looping over grid.invaders
@@ -938,15 +952,15 @@ function animate() {
 
   // spawn enemies
   if (frames % randomInteveral === 0) {
-    spawnBuffer = (spawnBuffer < 0) ? 10 : spawnBuffer; // spawnBuffer cannot be a negative value
+    spawnBuffer = spawnBuffer < 0 ? 10 : spawnBuffer; // spawnBuffer cannot be a negative value
     invaderGrids.push(new InvaderGrid());
-    randomInteveral = Math.floor((Math.random() * 500) + spawnBuffer);
+    randomInteveral = Math.floor(Math.random() * 500 + spawnBuffer);
     frames = 0;
     spawnBuffer -= 100;
   }
 
-  // Machine Gun PowerUp
-  if (keys.space.pressed && player.powerUp === "MachineGun") {
+  // Laser PowerUp
+  if (keys.space.pressed && player.powerUp === "Laser") {
     audio.laser.play();
     projectiles.push(
       new Projectile({
@@ -958,7 +972,7 @@ function animate() {
           x: 0,
           y: -10,
         },
-        color: "#3F5EF9",
+        color: "red",
       })
     );
   }
@@ -1069,7 +1083,7 @@ addEventListener("keydown", ({ key }) => {
     case " ": // space, shoot by adding projectile to array
       keys.space.pressed = true
 
-      if (player.powerUp === 'MachineGun') return
+      if (player.powerUp === 'Laser') return
 
       audio.shoot.play()
       projectiles.push(
