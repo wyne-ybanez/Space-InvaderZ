@@ -159,7 +159,11 @@ Here is a link that can explain this process further. [Click Here](https://help.
 
 ### Content
 
-...
+Special thanks to these content creators for their free content.
+
+- GameSupplyGuy for " 200+ Space Sound Effects (Various Futuristic SFX) "
+- Cwupcwake for " Basic game 8bit game sound "
+- Goose Ninja for " Space Music Pack by Goose Ninja"
 
 ### Media
 
@@ -175,4 +179,4 @@ Here is a link that can explain this process further. [Click Here](https://help.
 
 ## Acknowledgements
 
-- ...
+- Special Thanks to Christopher Lis for his tutorial on how to create this game and to develop it further.
