@@ -1,0 +1,123 @@
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: black;
+    font-family: sans-serif;
+    font-size: 1.2rem;
+    color: #fff;
+}
+
+#controls {
+    padding-top: 4rem;
+    padding-left: 4rem;
+    color: #fff;
+    display: none;
+}
+
+#restartScreen {
+    display: none;
+}
+
+.score-container {
+    position: fixed;
+    z-index: 10;
+    color: white;
+    left: 1.5rem;
+    top: 1.5rem;
+    margin: 0;
+    display: none;
+}
+
+.controls div {
+    box-shadow: 0 10px 15px -3px rgba(3, 249, 208, 0.9);
+}
+
+.controls.controls-buttons {
+    display: flex;
+}
+
+.controls .spacebar {
+    position: absolute;
+    width: 17.98rem;
+}
+
+.controls.footer-container {
+    margin-left: 4rem;
+    margin-top: 1.5rem;
+    display: flex;
+}
+
+.w,
+.a,
+.s,
+.d,
+.spacebar {
+    width: 2.5rem;
+    border-radius: 5px;
+    border: 2px solid gray;
+    color: #fff;
+    padding: 0.7rem;
+    text-align: center;
+    display: none;
+}
+
+.w {
+    margin-left: 4rem;
+}
+
+.a,
+.s,
+.d {
+    margin-left: 1rem;
+}
+
+.game-ui {
+    position: absolute;
+    top: 0;
+    right: 0%;
+    bottom: 0;
+    left: 0%;
+    background: url('../img/startScreenBackground.png');
+    z-index: 20;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-direction: column;
+}
+
+.game-ui .game-title {
+    text-align: center;
+}
+
+.game-ui .start-button,
+.game-ui .restart-button {
+    position: absolute;
+    color: white;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    left: 50%;
+}
+
+.alien {
+    font-size: 2rem;
+}
+
+.copyright {
+    color: #fff;
+    margin-left: auto;
+    padding-right: 4rem;
+    align-self: flex-end;
+}
+
+.ui-button {
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+}
