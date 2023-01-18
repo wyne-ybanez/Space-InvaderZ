@@ -22,11 +22,21 @@
         display: none;
     }
 
+    .score-container {
+        position: fixed;
+        z-index: 10;
+        color: white;
+        left: 1.5rem;
+        top: 1.5rem;
+        margin: 0;
+        display: none;
+    }
+
     .controls div {
         box-shadow: 0 10px 15px -3px rgba(3, 249, 208, 0.9);
     }
 
-    .controls.control-buttons {
+    .controls.controls-buttons {
         display: flex;
     }
 
@@ -115,31 +125,20 @@
 </style>
 
 <div style="position: relative;" id="ParentDiv">
-    <!-- score -->
     <p  id="scoreContainer"
-        style="
-            position: fixed;
-            z-index: 10;
-            color: white;
-            left: 1.5rem;
-            top: 1.5rem;
-            margin: 0;
-            display: none;
-        "
-    >
+        class="score-container">
         <span>Score:</span> <span id="scoreEl">0</span>
     </p>
-    <!-- canvas -->
+
     <canvas></canvas>
 
-    <!-- background container -->
     <div class="game-ui" id="startScreen">
         <div class="game-title">
             <h1><span class="alien">👾</span> Space Invaderz Ultra <span class="alien">👾</span></h1>
             <p>Welcome, I hope you enjoy the game. Updates still to come.</p>
             <p>Click anywhere on screen to turn the music on 🎧</p>
         </div>
-        <!-- button -->
+
         <div id="startButton" class="ui-button">
             <img src="./img/button.png" alt="Start Button">
             <span class="start-button">Start</span>
@@ -147,24 +146,22 @@
     </div>
 
     <!-- restart screen -->
-    <!-- background container -->
     <div class="game-ui" id="restartScreen">
         <div class="game-title">
             <h1>Game Over</h1>
         </div>
-        <!-- button -->
+        
         <div id="restartButton" class="ui-button">
             <img src="./img/button.png" alt="Restart Button">
             <span class="restart-button">Restart</span>
         </div>
     </div>
 
-    <!-- sub-headings -->
-    <p id="controls">
+    <p id="controls" class="controls-title">
         Controls:
     </p>
-    <!-- Controls -->
-    <div class="controls control-buttons">
+
+    <div class="controls controls-buttons">
         <div class="w">
             &uarr;
             W
