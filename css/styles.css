@@ -121,3 +121,18 @@ body {
     position: relative;
     display: inline-block;
 }
+
+.score-number {
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+    font-size: 3rem;
+}
+
+.score-text {
+    margin-top: 0;
+    margin-bottom: 3rem;
+}
+
+.game-over-text {
+    font-size: 2rem;
+}

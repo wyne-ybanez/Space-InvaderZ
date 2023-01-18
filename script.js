@@ -24,6 +24,7 @@ let millisecondsPrev = window.performance.now(); // amount of milliseconds that 
 
 let frames = 0;
 let score = 0;
+let finalScore = document.querySelector("#finalScore");
 let randomInteveral = Math.floor(Math.random() * 400 + 500);
 let game = {
   over: false,
@@ -111,6 +112,8 @@ function init() {
   };
   frames = 0;
   score = 0;
+  finalScore.innerHTML = score;
+  scoreEl.innerHTML = score;
   randomInteveral = Math.floor(Math.random() * 400 + 500);
   spawnBuffer = 500;
   game = {
@@ -153,7 +156,8 @@ function endGame() {
 
     setTimeout(() => {
       game.active = false;
-      document.querySelector('#restartScreen').style.display = 'flex'
+      document.querySelector('#restartScreen').style.display = 'flex';
+      document.querySelector("#finalScore").innerHTML = score;
     }, 2000);
 
     createParticles({
