@@ -1,3 +1,5 @@
+@import './media_queries.css';
+
 body {
     margin: 0;
     display: flex;
@@ -8,6 +10,7 @@ body {
     font-family: sans-serif;
     font-size: 1.2rem;
     color: #fff;
+    overflow-y: hidden;
 }
 
 #controls {

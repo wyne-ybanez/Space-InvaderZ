@@ -47,7 +47,7 @@ class InvaderGrid {
 
     // if Invader Grid hits canvas edge
     if (this.position.x + this.width >= canvas.width || this.position.x <= 0) {
-      this.velocity.x = -this.velocity.x * 1.25;
+      this.velocity.x = -this.velocity.x * 1.15;
       this.velocity.y = 30;
     }
   }

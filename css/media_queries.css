@@ -1,0 +1,35 @@
+@media (max-width: 600px) {
+    #footer {
+        display: none !important;
+    }
+
+    /* .game-ui .game-title {
+        font-size: 200%;
+    } */
+
+    /* .game-over-text {
+        font-size: 4rem;
+    }
+
+    .score-number {
+        font-size: 7rem;
+    }
+
+    .score-text {
+        font-size: 2rem;
+    } */
+
+    /* #startButton img,
+    #restartScreen img {
+        width: 20rem;
+    }
+
+    #startButton .start-button,
+    #restartScreen .restart-button {
+        font-size: 3rem;
+    }
+
+    #startButton {
+        margin-top: 1rem;
+    } */
+}

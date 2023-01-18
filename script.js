@@ -34,6 +34,7 @@ let game = {
 const c = canvas.getContext("2d"); // get canvas, set it to 2D
 
 audio.battle.play();
+
 canvas.width = innerWidth;
 canvas.height = innerHeight / 1.5;
 
