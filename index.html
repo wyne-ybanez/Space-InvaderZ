@@ -11,8 +11,34 @@
         color: #fff;
     }
 
+    #controls {
+        padding-top: 4rem;
+        padding-left: 4rem;
+        color: #fff;
+        display: none;
+    }
+
+    #restartScreen {
+        display: none;
+    }
+
     .controls div {
         box-shadow: 0 10px 15px -3px rgba(3, 249, 208, 0.9);
+    }
+
+    .controls.control-buttons {
+        display: flex;
+    }
+
+    .controls .spacebar {
+        position: absolute;
+        width: 17.98rem;
+    }
+
+    .controls.footer-container {
+        margin-left: 4rem;
+        margin-top: 1.5rem;
+        display: flex;
     }
 
     .w,
@@ -27,6 +53,16 @@
         padding: 0.7rem;
         text-align: center;
         display: none;
+    }
+
+    .w {
+        margin-left: 4rem;
+    }
+
+    .a,
+    .s,
+    .d {
+        margin-left: 1rem;
     }
 
     .game-ui {
@@ -64,8 +100,17 @@
         font-size: 2rem;
     }
 
-    #restartScreen {
-        display: none;
+    .copyright {
+        color: #fff;
+        margin-left: auto;
+        padding-right: 4rem;
+        align-self: flex-end;
+    }
+
+    .ui-button {
+        cursor: pointer;
+        position: relative;
+        display: inline-block;
     }
 </style>
 
@@ -90,20 +135,12 @@
     <!-- background container -->
     <div class="game-ui" id="startScreen">
         <div class="game-title">
-            <h1 style="color: white"><span class="alien">👾</span> Space Invaderz Ultra <span class="alien">👾</span></h1>
-            <p>Welcome, I hope you enjoy the game. Updates still to come!</p>
-            <p>The game might take awhile to optimise the FPS, so you may see flickering.</p>
+            <h1><span class="alien">👾</span> Space Invaderz Ultra <span class="alien">👾</span></h1>
+            <p>Welcome, I hope you enjoy the game. Updates still to come.</p>
             <p>Click anywhere on screen to turn the music on 🎧</p>
         </div>
         <!-- button -->
-        <div
-            id="startButton"
-            style="
-                cursor: pointer;
-                position: relative;
-                display: inline-block;
-            "
-        >
+        <div id="startButton" class="ui-button">
             <img src="./img/button.png" alt="Start Button">
             <span class="start-button">Start</span>
         </div>
@@ -113,80 +150,44 @@
     <!-- background container -->
     <div class="game-ui" id="restartScreen">
         <div class="game-title">
-            <h1 style="color: white">Game Over</h1>
+            <h1>Game Over</h1>
         </div>
         <!-- button -->
-        <div
-            id="restartButton"
-            style="
-                cursor: pointer;
-                position: relative;
-                display: inline-block;
-            "
-        >
+        <div id="restartButton" class="ui-button">
             <img src="./img/button.png" alt="Restart Button">
             <span class="restart-button">Restart</span>
         </div>
     </div>
 
     <!-- sub-headings -->
-    <p  id="controls"
-        style="
-            padding-top: 4rem;
-            padding-left: 4rem;
-            color: #fff;
-            display: none;
-        "
-    >
+    <p id="controls">
         Controls:
     </p>
     <!-- Controls -->
-    <div class="controls" style="display: flex">
-        <div class="w" style="
-            margin-left: 4rem;
-            ">
+    <div class="controls control-buttons">
+        <div class="w">
             &uarr;
             W
         </div>
-        <div class="a" style="
-            margin-left: 1rem;
-            ">
+        <div class="a">
             &larr;
             A
         </div>
-        <div class="s" style="
-            margin-left: 1rem;
-            ">
+        <div class="s">
             &darr;
             S
         </div>
-        <div class="d" style="
-            margin-left: 1rem;
-            ">
+        <div class="d">
             &rarr;
             D
         </div>
     </div>
-    <div class="controls" style="
-        margin-left: 4rem;
-        margin-top: 1.5rem;
-        display: flex;
-        ">
-        <div class="spacebar" style="
-            position: absolute;
-            width: 17.98rem;
-            ">
+    <div class="controls footer-container">
+        <div class="spacebar">
             SPACEBAR
         </div>
 
-        <p
-            style="
-                color: #fff;
-                margin-left: auto;
-                padding-right: 4rem;
-                align-self: flex-end;
-            "
-        >
+        <p class="copyright">
             © Wyne Ybanez
         </p>
     </div>
