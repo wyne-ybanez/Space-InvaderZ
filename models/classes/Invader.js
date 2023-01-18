@@ -1,18 +1,13 @@
-const canvas = document.querySelector("canvas");
-const c = canvas.getContext("2d"); // get canvas, set it to 2D
-
-canvas.width = innerWidth;
-canvas.height = innerHeight;
-
 /**
  * Invader Class
  * - starting position
  * - velocity
  * - body (image, width, height)
+ *
+ * @params 'position' as object
  */
 class Invader {
-  // ====== Constructor
-  constructor() {
+  constructor({ position }) {
     const image = new Image(); // this comes from the JavaScript API
     image.src = "./img/invader.png"; // get the image but takes time to load
     const scale = 1;
@@ -35,16 +30,12 @@ class Invader {
       };
 
       this.position = {
-        x: canvas.width / 2 - this.body.width / 2,
-        y: canvas.height / 2,
+        x: position.x,
+        y: position.y,
       };
     };
   }
 
-  //====== Methods
-  /**
-   * Draw Invader
-   */
   draw() {
     c.drawImage(
       this.body.image,
@@ -55,14 +46,27 @@ class Invader {
     );
   }
 
-  /**
-   * Update Invader
-   */
-  update() {
+  update({ velocity }) {
     if (this.imageLoad) {
       this.draw();
-      this.position.x += this.velocity.x;
-      this.position.y += this.velocity.y;
+      this.position.x += velocity.x;
+      this.position.y += velocity.y;
     }
+  }
+
+  shoot(invaderProjectiles) {
+    audio.enemyShoot.play();
+    invaderProjectiles.push(
+      new InvaderProjectile({
+        position: {
+          x: this.position.x + this.body.width / 2,
+          y: this.position.y + this.body.height,
+        },
+        velocity: {
+          x: 0,
+          y: 5,
+        },
+      })
+    );
   }
 }

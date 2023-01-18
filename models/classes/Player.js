@@ -1,17 +1,10 @@
-const canvas = document.querySelector("canvas");
-const c = canvas.getContext("2d"); // get canvas, set it to 2D
-
-canvas.width = innerWidth;
-canvas.height = innerHeight;
-
 /**
  * Player Class
  * - starting position
  * - velocity
  * - body (image, width, height)
  */
-export default class Player {
-  // ====== Constructor
+class Player {
   constructor() {
     const image = new Image(); // this comes from the JavaScript API
     image.src = "./img/spaceship.png"; // get the image but takes time to load
@@ -24,6 +17,9 @@ export default class Player {
     };
 
     this.rotation = 0;
+    this.opacity = 1;
+    this.shadowColor = "skyblue";
+    this.shadowBlur = 20;
 
     // Image has loaded hence, set attributes
     image.onload = () => {
@@ -40,20 +36,24 @@ export default class Player {
         y: canvas.height - this.body.height - margin,
       };
     };
+
+    this.particles = [];
+    this.frames = 0;
   }
 
   //====== Methods
   /**
    * Draw Player
-   * - sets player ship rotation
-   * - restore context after rotation
    */
   draw() {
     // DEBUGGING - comment out if unused
     // c.fillStyle = 'red'
     // c.fillRect(this.position.x, this.position.y, this.body.width, this.body.height)
-
     c.save();
+
+    // set player opacity
+    c.globalAlpha = this.opacity;
+
     // makes rotatation
     c.translate(
       player.position.x + player.body.width / 2,
@@ -74,18 +74,38 @@ export default class Player {
       this.body.width,
       this.body.height
     );
-
     c.restore();
   }
 
   /**
    * Update Player
-   * - updates player position/changes
    */
   update() {
-    if (this.imageLoad) {
-      this.draw();
-      this.position.x += this.velocity.x;
+    if (!this.imageLoad) return;
+    if (this.opacity !== 1) return;
+
+    this.draw();
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
+
+    this.frames++;
+
+    if (this.frames % 2 === 0) {
+      this.particles.push(
+        new Particle({
+          position: {
+            x: this.position.x + this.body.width / 2,
+            y: this.position.y + this.body.height,
+          },
+          velocity: {
+            x: (Math.random() - 0.5) * 1.3,
+            y: 1.4,
+          },
+          radius: Math.random() * 2,
+          color: "skyblue",
+          fades: true,
+        })
+      );
     }
   }
 }
