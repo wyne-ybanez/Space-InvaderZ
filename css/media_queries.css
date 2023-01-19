@@ -3,30 +3,37 @@
         display: none !important;
     }
 
-    /* .game-ui .game-title {
-        font-size: 200%;
-    } */
+    .game-ui .game-title {
+        font-size: 1rem;
+    }
+
+    .alien {
+        font-size: 1rem !important;
+    }
 
     .game-over-text {
-        font-size: 4rem;
+        font-size: 1.5rem !important;
+        margin-bottom: 0 !important; 
+        padding-top: 4rem;
     }
 
     .score-number {
-        font-size: 7rem;
+        margin-top: 1rem !important;
     }
 
     .score-text {
-        font-size: 2rem;
-    } */
+        margin-bottom: 2rem !important;
+        font-size: 1.5rem !important;
+    } 
 
     #startButton img,
     #restartScreen img {
-        width: 20rem;
+        width: 10rem;
     }
 
     #startButton .start-button,
     #restartScreen .restart-button {
-        font-size: 3rem;
+        font-size: 2rem;
     }
 
     #startButton {
