@@ -1,5 +1,7 @@
 # Space Invaderz Ultra
 
+![Banner](./img/banner.png)
+
 Deployed Site: https://space-invaderz-ultra-wyne.netlify.app/
 
 &nbsp;
