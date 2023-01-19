@@ -17,9 +17,14 @@ class InvaderGrid {
 
     this.invaders = [];
 
-    // equation to set rows, columns, width for grid
-    const columns = Math.floor(Math.random() * 10 + 5);
-    const rows = Math.floor(Math.random() * 5 + 2);
+    // set rows, columns, width for Grid
+    let columns = Math.floor(Math.random() * 10 + 5);
+    let rows = Math.floor(Math.random() * 5 + 2);
+
+    if (innerWidth <= 600) {
+      columns = Math.floor(Math.random() * 2 + 4);
+      rows = Math.floor(Math.random() * 3 + 2);
+    }
 
     this.width = columns * 30; // 30 is the width of each invader
 

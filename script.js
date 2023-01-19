@@ -35,8 +35,15 @@ const c = canvas.getContext("2d"); // get canvas, set it to 2D
 
 audio.battle.play();
 
-canvas.width = innerWidth;
-canvas.height = innerHeight / 1.5;
+if (innerWidth <= 600) {
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+}
+else {
+  canvas.width = innerWidth;
+  canvas.height = innerHeight / 1.5;
+}
+
 
 /**
  * Init Objects
@@ -220,7 +227,7 @@ function animate() {
   }
 
   // spawn Bombs
-  if (frames % 300 === 0) {
+  if (frames % 500 === 0) {
     bombs.push(
       new Bomb({
         position: {

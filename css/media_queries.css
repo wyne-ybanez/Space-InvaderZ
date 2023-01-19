@@ -7,7 +7,7 @@
         font-size: 200%;
     } */
 
-    /* .game-over-text {
+    .game-over-text {
         font-size: 4rem;
     }
 
@@ -19,7 +19,7 @@
         font-size: 2rem;
     } */
 
-    /* #startButton img,
+    #startButton img,
     #restartScreen img {
         width: 20rem;
     }
@@ -31,5 +31,5 @@
 
     #startButton {
         margin-top: 1rem;
-    } */
+    }
 }
