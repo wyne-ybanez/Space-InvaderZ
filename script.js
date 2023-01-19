@@ -33,7 +33,7 @@ let game = {
 
 const c = canvas.getContext("2d"); // get canvas, set it to 2D
 
-audio.battle.play();
+audio.intro.play();
 
 if (innerWidth <= 600) {
   canvas.width = innerWidth;
@@ -227,7 +227,7 @@ function animate() {
   }
 
   // spawn Bombs
-  if (frames % 500 === 0) {
+  if (frames % 400 === 0) {
     bombs.push(
       new Bomb({
         position: {
@@ -551,7 +551,7 @@ function animate() {
  */
 document.querySelector('#startButton').addEventListener('click',
   () => {
-    audio.battle.stop()
+    audio.intro.stop()
     audio.backgroundMusic.play();
     audio.select.play();
 

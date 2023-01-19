@@ -1,19 +1,22 @@
-# Space Invaderz
+# Space Invaderz Ultra
 
 Deployed Site: https://space-invaderz-ultra-wyne.netlify.app/
-...
 
 &nbsp;
 
 ## Project Goal
 
-...
+To create a 2D Space Invaders game with powerups, increasingly difficult enemies, a scoring system, amazing soundtrack and just overall fun to play. The game is at its base version at the moment.
 
 &nbsp;
 
 ## Learning Outcomes
 
-- ...
+- Class & Object heavy project: using object functions and meshing that in with the overall game animation functions
+- Basic 2D Game Development
+- Canvas functions
+- Geometry: Projectile and Sprite collisions, collision detection
+- Overall usage of programming fundamentals
 
 &nbsp;
 
@@ -35,7 +38,7 @@ Deployed Site: https://space-invaderz-ultra-wyne.netlify.app/
 - Score functionality
 - Fixed-width for the canvas
 
-**Extras:**
+**Features:**
 
 - Dynamic score labels
 - Bombs
@@ -44,20 +47,6 @@ Deployed Site: https://space-invaderz-ultra-wyne.netlify.app/
 - Spaceship sprite animation
 - Start and Game Over UI
 - Sound effects and Music
-
-&nbsp;
-
-## Features
-
-### Some Feature:
-
-...
-
-&nbsp;
-
-## Testing
-
-...
 
 &nbsp;
 
@@ -72,7 +61,9 @@ Deployed Site: https://space-invaderz-ultra-wyne.netlify.app/
 - [Visual Studio Code](https://code.visualstudio.com/) - The IDE used to code the website.
 
 ### Frameworks, Libraries, CDN's, Resources etc.
-- ...
+
+- [Howler.js](https://howlerjs.com/)
+- [GSAP](https://github.com/greensock/GSAP)
 
 &nbsp;
 
@@ -104,7 +95,7 @@ Here is a link that can explain this process further. [Click Here](https://help.
 
 ## Deployment
 
-...
+Project is deployed on Netlify.
 
 &nbsp;
 
@@ -118,15 +109,21 @@ Here is a link that can explain this process further. [Click Here](https://help.
 
 Special thanks to these content creators for their free content.
 
-- GameSupplyGuy for " 200+ Space Sound Effects (Various Futuristic SFX) "
-- Cwupcwake for " Basic game 8bit game sound "
-- Goose Ninja for " Space Music Pack by Goose Ninja"
+- GameSupplyGuy for "200+ Space Sound Effects (Various Futuristic SFX)"
+- Cwupcwake for "Basic game 8bit game sound"
+- Goose Ninja for "Space Music Pack"
+- Eclipzodiac for "RPG Battle music - RPG Maker Mix V1.25"
 
 &nbsp;
 
 ## Future Implementations
 
-- ...
+- Mobile responsiveness with touch screen functions
+- Boss Battles
+- Log player scores in local storage or in a JSON database
+- Display last score earned
+- Additional power ups
+- Level System
 
 &nbsp;
 

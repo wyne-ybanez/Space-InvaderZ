@@ -2,12 +2,29 @@ Howler.volume(0.5)
 
 const audio = {
   backgroundMusic: new Howl({
-    src: "./audio/backgroundMusic.wav",
-    loop: true,
-    volume: 0.3,
+    src: ["./audio/Eleuxelier.mp3", ,],
+    autplay: true,
+    volume: 0.4,
+    onend: () => {
+      audio.backgroundMusic2.play()
+    }
   }),
-  battle: new Howl({
-    src: "./audio/battle.wav",
+  backgroundMusic2: new Howl({
+    src: "./audio/TheGauntletAndTheDragon.mp3",
+    autplay: true,
+    volume: 0.4,
+    onend: () => {
+      audio.backgroundMusic3.play()
+    }
+  }),
+  backgroundMusic3: new Howl({
+    src: "./audio/EraMachine.mp3",
+    autplay: true,
+    loop: true,
+    volume: 0.4,
+  }),
+  intro: new Howl({
+    src: "./audio/intro.wav",
     loop: true,
     volume: 0.5,
     autoplay: true,
@@ -36,7 +53,7 @@ const audio = {
   }),
   shoot: new Howl({
     src: "./audio/shoot.mp3",
-    volume: 1,
+    volume: 0.7,
   }),
   start: new Howl({
     src: "./audio/start.mp3",
