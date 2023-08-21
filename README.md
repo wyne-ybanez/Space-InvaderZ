@@ -131,6 +131,6 @@ Special thanks to these content creators for their free content.
 
 ## Acknowledgements
 
-- Special Thanks to Christopher Lis for his tutorial on how to create this game and to develop it further.
+- Special Thanks to Christopher Lis for his [tutorial](https://www.udemy.com/course/space-invaders-with-javascript-and-html-canvas/) on how to create this game and to develop it further.
 
 - Thanks to friends and family for playing this game and testing it out for me.
