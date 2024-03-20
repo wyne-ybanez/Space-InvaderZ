@@ -93,6 +93,8 @@ git clone https://github.com/wyne-ybanez/Space-InvaderZ.git
 
 Here is a link that can explain this process further. [Click Here](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository#cloning-a-repository-to-github-desktop)
 
+4. You can just run `index.html` on your browser.
+
 &nbsp;
 
 ## Deployment
