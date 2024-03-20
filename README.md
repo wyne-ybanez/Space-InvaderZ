@@ -105,7 +105,7 @@ Project is deployed on Netlify.
 
 ## Bugs
 
-* ...
+* Spaceships goes off map sometimes
 
 &nbsp;
 
