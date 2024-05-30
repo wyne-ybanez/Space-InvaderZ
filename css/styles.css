@@ -14,8 +14,6 @@ body {
 }
 
 #controls {
-    padding-top: 4rem;
-    padding-left: 4rem;
     color: #fff;
     display: none;
 }
@@ -138,4 +136,11 @@ body {
 
 .game-over-text {
     font-size: 2rem;
+}
+
+.footer {
+    display: inline-block;
+    position: absolute;
+    background: transparent;
+    bottom: 6rem;
 }

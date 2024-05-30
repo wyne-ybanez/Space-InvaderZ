@@ -41,7 +41,7 @@ if (innerWidth <= 600) {
 }
 else {
   canvas.width = innerWidth;
-  canvas.height = innerHeight / 1.5;
+  canvas.height = innerHeight;
 }
 
 
@@ -557,7 +557,6 @@ document.querySelector('#startButton').addEventListener('click',
 
     startScreen.style.display = "none";
     scoreContainer.style.display = "block";
-    controls.style.display = "block";
     w.style.display = "block";
     a.style.display = "block";
     s.style.display = "block";
